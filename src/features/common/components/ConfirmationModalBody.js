@@ -6,6 +6,7 @@ import {
 } from "../../../utils/globalConstantUtil";
 import { HapusUser } from "../../manajemenUser/manajemenUserSlice";
 import { showNotification } from "../headerSlice";
+import { hapusJabatan } from "../../jabatan/jabatanSlice";
 
 function ConfirmationModalBody({ extraObject, closeModal }) {
   const dispatch = useDispatch();
@@ -29,6 +30,31 @@ function ConfirmationModalBody({ extraObject, closeModal }) {
           );
           if (response) {
             dispatch(HapusUser({ index }));
+            dispatch(showNotification({ message: "Data Dihapus!", status: 1 }));
+          }
+        } catch (err) {
+          if (!err?.response) {
+            dispatch(
+              showNotification({ message: "Error Server !", status: 0 })
+            );
+          } else {
+            dispatch(showNotification({ message: "Error !", status: 0 }));
+          }
+        }
+      } else if (aksi === "jabatan") {
+        try {
+          const token = localStorage.getItem("token");
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+          const response = await axios.put(
+            `/APIHaloKominfoInternal/api/HapusJabatan//${id}`,
+            config
+          );
+          if (response) {
+            dispatch(hapusJabatan({ index }));
             dispatch(showNotification({ message: "Data Dihapus!", status: 1 }));
           }
         } catch (err) {
