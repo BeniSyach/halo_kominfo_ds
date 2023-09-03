@@ -6,7 +6,7 @@ import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
 import { editJabatan } from "../jabatanSlice";
 
-function EditManajemenUserModalBody({ extraObject, closeModal }) {
+function EditJabatanModalBody({ extraObject, closeModal }) {
   const { index } = extraObject;
 
   const jabatan = useSelector((state) => state.jabatan);
@@ -101,4 +101,4 @@ function EditManajemenUserModalBody({ extraObject, closeModal }) {
   );
 }
 
-export default EditManajemenUserModalBody;
+export default EditJabatanModalBody;

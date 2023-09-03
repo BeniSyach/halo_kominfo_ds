@@ -6,6 +6,7 @@ import ConfirmationModalBody from "../features/common/components/ConfirmationMod
 import AddManajemenUserModalBody from "../features/manajemenUser/components/AddManajemenUserModalBody";
 import EditManajemenUserModalBody from "../features/manajemenUser/components/EditManajemenUserModalBody";
 import AddJabatanModalBody from "../features/jabatan/components/AddJabatanModalBody";
+import EditJabatanModalBody from "../features/jabatan/components/EditJabatanModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -53,6 +54,13 @@ function ModalLayout() {
                   extraObject={extraObject}
                 />
               ),
+              [MODAL_BODY_TYPES.Edit_jabatan_NEW]: (
+                <EditJabatanModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+
               [MODAL_BODY_TYPES.CONFIRMATION]: (
                 <ConfirmationModalBody
                   extraObject={extraObject}

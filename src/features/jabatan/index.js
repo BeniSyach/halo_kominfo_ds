@@ -132,7 +132,7 @@ function Jabatan() {
     dispatch(
       openModal({
         title: "Edit Jabatan",
-        bodyType: MODAL_BODY_TYPES.Edit_LEAD_jabatan_NEW,
+        bodyType: MODAL_BODY_TYPES.Edit_jabatan_NEW,
         extraObject: {
           index,
           data,
