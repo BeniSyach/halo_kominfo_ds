@@ -1,21 +1,27 @@
 import axios from "axios";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
-import { tambahUser } from "../manajemenUserSlice";
+import { editOPD } from "../manajemenOPDSlice";
 
-const INITIAL_LEAD_OBJ = {
-  namaPegawaiBaru: "",
-  nipBaru: "",
-  nikBaru: "",
-  jabatanBaru: "",
-  idPegawaiAkses: "",
-};
+function EditManajemenOPDModalBody({ extraObject, closeModal }) {
+  const { index } = extraObject;
 
-function AddManajemenUserModalBody({ closeModal }) {
+  const manajemenOPD = useSelector((state) => state.opd);
+
+  const [data, setData] = useState(
+    manajemenOPD.manajemenOPD.find((data) => data.id === index)
+  );
+
   const dispatch = useDispatch();
+
+  const INITIAL_LEAD_OBJ = {
+    namaOpd: data.namaOpd,
+    idPegawaiAkses: "",
+  };
+
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
@@ -32,18 +38,12 @@ function AddManajemenUserModalBody({ closeModal }) {
     else if (leadObj.idPegawaiAkses.trim() === "")
       return setErrorMessage("Akses Pegawai Tidak Boleh Kosong !");
     else {
-      let newLeadObj = {
-        NIK: leadObj.nikBaru,
-        namaPegawai: leadObj.namaPegawaiBaru,
-        NIP: leadObj.nipBaru,
-        jabatanBaru: leadObj.jabatanBaru,
+      let dataOPD = {
+        namaOpd: leadObj.namaOpd,
         status: leadObj.idPegawaiAkses,
       };
       let datafordatabase = {
-        nikBaru: leadObj.nikBaru,
-        namaPegawaiBaru: leadObj.namaPegawaiBaru,
-        nipBaru: leadObj.nipBaru,
-        jabatanBaru: leadObj.jabatanBaru,
+        namaOpd: leadObj.namaOpd,
         idPegawaiAkses: leadObj.idPegawaiAkses,
       };
       try {
@@ -53,15 +53,15 @@ function AddManajemenUserModalBody({ closeModal }) {
             Authorization: `Bearer ${token}`,
           },
         };
-        const response = await axios.post(
-          "/APIHaloKominfoInternal/api/TambahPegawai",
+        const response = await axios.put(
+          `/APIHaloKominfoInternal/api/EditOpd/${data.id}`,
           datafordatabase,
           config
         );
         if (response) {
-          dispatch(tambahUser({ newLeadObj }));
+          dispatch(editOPD({ index, dataOPD }));
           dispatch(
-            showNotification({ message: "User Telah Ditambahkan!", status: 1 })
+            showNotification({ message: "OPD Telah Diedit!", status: 1 })
           );
           closeModal();
         }
@@ -71,7 +71,7 @@ function AddManajemenUserModalBody({ closeModal }) {
           dispatch(showNotification({ message: "Error Server !", status: 0 }));
         } else {
           dispatch(
-            showNotification({ message: "Data gagal Di Tambahkan", status: 0 })
+            showNotification({ message: "Data gagal Di Edit", status: 0 })
           );
         }
       }
@@ -85,54 +85,12 @@ function AddManajemenUserModalBody({ closeModal }) {
 
   return (
     <>
-      <div className="inline-block float-left">
-        <button className="btn px-6 mb-2 btn-sm normal-case btn-warning">
-          Import Data
-        </button>
-      </div>
-
       <InputText
         type="text"
-        defaultValue={leadObj.namaPegawaiBaru}
-        updateType="namaPegawaiBaru"
+        defaultValue={leadObj.namaOpd}
+        updateType="namaOpd"
         containerStyle="mt-4"
-        labelTitle="Nama Pegawai"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputText
-        type="number"
-        defaultValue={leadObj.nipBaru}
-        updateType="nipBaru"
-        containerStyle="mt-4"
-        labelTitle="NIP"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputText
-        type="number"
-        defaultValue={leadObj.nikBaru}
-        updateType="nikBaru"
-        containerStyle="mt-4"
-        labelTitle="NIK"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputText
-        type="jabatanBaru"
-        defaultValue={leadObj.jabatanBaru}
-        updateType="jabatanBaru"
-        containerStyle="mt-4"
-        labelTitle="Jabatan"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputText
-        type="text"
-        defaultValue={leadObj.idPegawaiAkses}
-        updateType="idPegawaiAkses"
-        containerStyle="mt-4"
-        labelTitle="Akses Pegawai"
+        labelTitle="Nama Organisasi Perangkat Daerah"
         updateFormValue={updateFormValue}
       />
 
@@ -149,4 +107,4 @@ function AddManajemenUserModalBody({ closeModal }) {
   );
 }
 
-export default AddManajemenUserModalBody;
+export default EditManajemenOPDModalBody;

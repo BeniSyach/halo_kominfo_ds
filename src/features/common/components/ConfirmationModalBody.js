@@ -7,6 +7,7 @@ import {
 import { HapusUser } from "../../manajemenUser/manajemenUserSlice";
 import { showNotification } from "../headerSlice";
 import { hapusJabatan } from "../../jabatan/jabatanSlice";
+import { hapusOPD } from "../../manajemenOPD/manajemenOPDSlice";
 
 function ConfirmationModalBody({ extraObject, closeModal }) {
   const dispatch = useDispatch();
@@ -50,11 +51,36 @@ function ConfirmationModalBody({ extraObject, closeModal }) {
             },
           };
           const response = await axios.put(
-            `/APIHaloKominfoInternal/api/HapusJabatan//${id}`,
+            `/APIHaloKominfoInternal/api/HapusJabatan/${id}`,
             config
           );
           if (response) {
             dispatch(hapusJabatan({ index }));
+            dispatch(showNotification({ message: "Data Dihapus!", status: 1 }));
+          }
+        } catch (err) {
+          if (!err?.response) {
+            dispatch(
+              showNotification({ message: "Error Server !", status: 0 })
+            );
+          } else {
+            dispatch(showNotification({ message: "Error !", status: 0 }));
+          }
+        }
+      } else if (aksi === "ManajemenOPD") {
+        try {
+          const token = localStorage.getItem("token");
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+          const response = await axios.put(
+            `/APIHaloKominfoInternal/api/HapusOpd/${id}`,
+            config
+          );
+          if (response) {
+            dispatch(hapusOPD({ index }));
             dispatch(showNotification({ message: "Data Dihapus!", status: 1 }));
           }
         } catch (err) {

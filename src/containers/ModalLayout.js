@@ -7,6 +7,8 @@ import AddManajemenUserModalBody from "../features/manajemenUser/components/AddM
 import EditManajemenUserModalBody from "../features/manajemenUser/components/EditManajemenUserModalBody";
 import AddJabatanModalBody from "../features/jabatan/components/AddJabatanModalBody";
 import EditJabatanModalBody from "../features/jabatan/components/EditJabatanModalBody";
+import AddManajemenOPDModalBody from "../features/manajemenOPD/components/AddManajemenOPDModalBody";
+import EditManajemenOPDModalBody from "../features/manajemenOPD/components/EditManajemenOPDModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -56,6 +58,18 @@ function ModalLayout() {
               ),
               [MODAL_BODY_TYPES.Edit_jabatan_NEW]: (
                 <EditJabatanModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.add_manajemen_OPD]: (
+                <AddManajemenOPDModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.edit_manajemen_OPD]: (
+                <EditManajemenOPDModalBody
                   closeModal={close}
                   extraObject={extraObject}
                 />

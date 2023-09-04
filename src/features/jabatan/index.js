@@ -121,8 +121,8 @@ function Jabatan() {
   const applySearch = (value) => {
     let filteredData = jabatan.filter((t) => {
       return (
-        t.namaPegawai.toLowerCase().includes(value.toLowerCase()) ||
-        t.namaPegawai.toLowerCase().includes(value.toLowerCase())
+        t.namaJabatan.toLowerCase().includes(value.toLowerCase()) ||
+        t.namaJabatan.toLowerCase().includes(value.toLowerCase())
       );
     });
     Setdata(filteredData);

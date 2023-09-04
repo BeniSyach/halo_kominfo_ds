@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
 import { openModal } from "../common/modalSlice";
-import { deleteLead, getmanajemenUserContent } from "./manajemenUserSlice";
+import { deleteLead, getmanajemenOPDContent } from "./manajemenOPDSlice";
 import {
   CONFIRMATION_MODAL_CLOSE_TYPES,
   MODAL_BODY_TYPES,
@@ -43,8 +43,8 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Tambah User",
-        bodyType: MODAL_BODY_TYPES.LEAD_ManajemenUser_NEW,
+        title: "Tambah Organisasi Perangkat Daerah",
+        bodyType: MODAL_BODY_TYPES.add_manajemen_OPD,
       })
     );
   };
@@ -56,7 +56,7 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
           className="btn px-6 btn-sm normal-case btn-primary"
           onClick={() => openAddNewLeadModal()}
         >
-          Tambah User Baru
+          Tambah OPD
         </button>
       </div>
       <div className="inline-block float-right  mr-5 ">
@@ -100,20 +100,20 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
 };
 
 function ManajemenOPD() {
-  const { manajemenUser } = useSelector((state) => state.datamanajemenUser);
+  const { manajemenOPD } = useSelector((state) => state.opd);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getmanajemenUserContent());
+    dispatch(getmanajemenOPDContent());
   }, [dispatch]);
 
-  const [data, Setdata] = useState(manajemenUser);
+  const [data, Setdata] = useState(manajemenOPD);
   const removeFilter = () => {
-    Setdata(manajemenUser);
+    Setdata(manajemenOPD);
   };
 
   const applyFilter = (params) => {
-    let filteredData = manajemenUser.filter((t) => {
+    let filteredData = manajemenOPD.filter((t) => {
       return t.location == params;
     });
     Setdata(filteredData);
@@ -121,10 +121,10 @@ function ManajemenOPD() {
 
   // Search according to name
   const applySearch = (value) => {
-    let filteredData = manajemenUser.filter((t) => {
+    let filteredData = manajemenOPD.filter((t) => {
       return (
-        t.namaPegawai.toLowerCase().includes(value.toLowerCase()) ||
-        t.namaPegawai.toLowerCase().includes(value.toLowerCase())
+        t.namaOPD.toLowerCase().includes(value.toLowerCase()) ||
+        t.namaOPD.toLowerCase().includes(value.toLowerCase())
       );
     });
     Setdata(filteredData);
@@ -133,8 +133,8 @@ function ManajemenOPD() {
   const editCurrentLead = (index, data) => {
     dispatch(
       openModal({
-        title: "Edit User",
-        bodyType: MODAL_BODY_TYPES.Edit_LEAD_ManajemenUser_NEW,
+        title: "Edit Manajemen OPD",
+        bodyType: MODAL_BODY_TYPES.edit_manajemen_OPD,
         extraObject: {
           index,
           data,
@@ -149,7 +149,7 @@ function ManajemenOPD() {
         title: "Konfirmasi",
         bodyType: MODAL_BODY_TYPES.CONFIRMATION,
         extraObject: {
-          message: `Apakah Kamu Yakin Menghapus Data Pegawai Ini?`,
+          message: `Apakah Kamu Yakin Menghapus Data OPD Ini?`,
           type: CONFIRMATION_MODAL_CLOSE_TYPES.LEAD_DELETE,
           id,
           index,
@@ -162,7 +162,7 @@ function ManajemenOPD() {
   return (
     <>
       <TitleCard
-        title="Manajemen User"
+        title="Menu Manajemen OPD"
         topMargin="mt-2"
         TopSideButtons={
           <TopSideButtons
@@ -177,33 +177,27 @@ function ManajemenOPD() {
             <thead>
               <tr>
                 <th>No</th>
-                <th>Nama Pegawai</th>
-                <th>NIP</th>
-                <th>NIK</th>
-                <th>Status</th>
+                <th>Nama OPD</th>
                 <th>#</th>
               </tr>
             </thead>
             <tbody>
-              {manajemenUser.map((l, k) => {
+              {manajemenOPD.map((l, k) => {
                 return (
                   <tr key={k}>
                     <td>{k + 1}</td>
-                    <td>{l.namaPegawai}</td>
-                    <td>{l.NIP}</td>
-                    <td>{l.NIK}</td>
-                    <td>{l.status}</td>
+                    <td>{l.namaOpd}</td>
                     <td>
                       <button
                         className="btn btn-square btn-ghost"
-                        onClick={() => editCurrentLead(l.NIK)}
+                        onClick={() => editCurrentLead(l.id)}
                       >
                         <PencilIcon className="w-5" />
                       </button>
                       <button
                         className="btn btn-square btn-ghost"
                         onClick={() =>
-                          deleteCurrentLead(l.id, k, "ManajemenUser")
+                          deleteCurrentLead(l.id, k, "ManajemenOPD")
                         }
                       >
                         <TrashIcon className="w-5" />
