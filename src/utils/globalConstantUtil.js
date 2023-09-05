@@ -10,6 +10,8 @@ module.exports = Object.freeze({
     edit_manajemen_OPD: "edit_manajemen_OPD",
     LEAD_jenisPelayanan_NEW: "LEAD_jenisPelayanan_NEW",
     Edit_LEAD_jenisPelayanan_NEW: "Edit_LEAD_jenisPelayanan_NEW",
+    LEAD_kategoriPelayanan_NEW: "LEAD_kategoriPelayanan_NEW",
+    Edit_LEAD_kategoriPelayanan_NEW: "Edit_LEAD_kategoriPelayanan_NEW",
     CONFIRMATION: "CONFIRMATION",
     DEFAULT: "",
   },

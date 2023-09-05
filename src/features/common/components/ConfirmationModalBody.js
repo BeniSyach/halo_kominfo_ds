@@ -8,6 +8,7 @@ import { HapusUser } from "../../manajemenUser/manajemenUserSlice";
 import { showNotification } from "../headerSlice";
 import { hapusJabatan } from "../../jabatan/jabatanSlice";
 import { hapusOPD } from "../../manajemenOPD/manajemenOPDSlice";
+import { hapusKategoriPelayanan } from "../../kategoriPelayanan/kategoriPelayananSlice";
 
 function ConfirmationModalBody({ extraObject, closeModal }) {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ function ConfirmationModalBody({ extraObject, closeModal }) {
             },
           };
           const response = await axios.delete(
-            `/APIHaloKominfoInternal/api/HapusPegawai/${id}`,
+            `/APIHaloKominfoInternal/api/HapusPegawai/${id}/${who_akses}`,
             { idPegawaiAkses: who_akses },
             config
           );
@@ -53,7 +54,7 @@ function ConfirmationModalBody({ extraObject, closeModal }) {
             },
           };
           const response = await axios.delete(
-            `/APIHaloKominfoInternal/api/HapusJabatan/${id}`,
+            `/APIHaloKominfoInternal/api/HapusJabatan/${id}/${who_akses}`,
             config
           );
           if (response) {
@@ -77,11 +78,35 @@ function ConfirmationModalBody({ extraObject, closeModal }) {
             },
           };
           const response = await axios.delete(
-            `/APIHaloKominfoInternal/api/HapusOpd/${id}`,
+            `/APIHaloKominfoInternal/api/HapusOpd/${id}/${who_akses}`,
             config
           );
           if (response) {
             dispatch(hapusOPD({ index }));
+            dispatch(showNotification({ message: "Data Dihapus!", status: 1 }));
+          }
+        } catch (err) {
+          if (!err?.response) {
+            dispatch(
+              showNotification({ message: "Error Server !", status: 0 })
+            );
+          } else {
+            dispatch(showNotification({ message: "Error !", status: 0 }));
+          }
+        }
+      } else if (aksi === "kategoriPelayanan") {
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+          const response = await axios.delete(
+            `/APIHaloKominfoInternal/api/HapusKategoriPelayanan/${id}/${who_akses}`,
+            config
+          );
+          if (response) {
+            dispatch(hapusKategoriPelayanan({ index }));
             dispatch(showNotification({ message: "Data Dihapus!", status: 1 }));
           }
         } catch (err) {

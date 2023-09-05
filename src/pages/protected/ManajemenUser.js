@@ -7,7 +7,7 @@ function InternalPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setPageTitle({ title: "Pengaduan" }));
+    dispatch(setPageTitle({ title: "Manajemen User" }));
   }, []);
 
   return <ManajemenUser />;

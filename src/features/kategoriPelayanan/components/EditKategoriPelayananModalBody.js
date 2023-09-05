@@ -4,25 +4,24 @@ import { useDispatch, useSelector } from "react-redux";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
-import { editUser } from "../manajemenUserSlice";
+import { editKategoriPelayanan } from "../kategoriPelayananSlice";
 
-function EditManajemenUserModalBody({ extraObject, closeModal }) {
+function EditKategoriPelayananModalBody({ extraObject, closeModal }) {
   const { index } = extraObject;
+  const who_akses = localStorage.getItem("who_akses");
 
-  const manajemenUser = useSelector((state) => state.datamanajemenUser);
+  const kategoriPelayanan = useSelector((state) => state.kategoriPelayanan);
 
-  const [data, setData] = useState(
-    manajemenUser.manajemenUser.find((data) => data.NIK === index)
+  const [dataKategori, setData] = useState(
+    kategoriPelayanan.kategoriPelayanan.find((data) => data.id === index)
   );
 
   const dispatch = useDispatch();
 
   const INITIAL_LEAD_OBJ = {
-    namaPegawaiBaru: data.namaPegawai,
-    nipBaru: data.NIP,
-    nikBaru: data.NIK,
-    jabatanBaru: data.jabatan,
-    idPegawaiAkses: data.status,
+    idJenisPelayanan: dataKategori.idJenisPelayanan,
+    kategoriPelayanan: dataKategori.kategoriPelayanan,
+    idPegawaiAkses: who_akses,
   };
 
   const [loading, setLoading] = useState(false);
@@ -30,29 +29,21 @@ function EditManajemenUserModalBody({ extraObject, closeModal }) {
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
 
   const saveNewLead = async () => {
-    if (leadObj.namaPegawaiBaru.trim() === "")
+    if (leadObj.idJenisPelayanan.trim() === "")
       return setErrorMessage("nama Pegawai Tidak Boleh Kosong !");
-    else if (leadObj.nikBaru.trim() === "")
-      return setErrorMessage("NIK Tidak Boleh Kosong !");
-    else if (leadObj.nipBaru.trim() === "")
+    else if (leadObj.kategoriPelayanan.trim() === "")
       return setErrorMessage("NIP Tidak Boleh Kosong !");
-    else if (leadObj.jabatanBaru.trim() === "")
-      return setErrorMessage("Jabatan Tidak Boleh Kosong !");
     else if (leadObj.idPegawaiAkses.trim() === "")
       return setErrorMessage("Akses Pegawai Tidak Boleh Kosong !");
     else {
       let data = {
-        NIK: leadObj.nikBaru,
-        namaPegawai: leadObj.namaPegawaiBaru,
-        NIP: leadObj.nipBaru,
-        jabatanBaru: leadObj.jabatanBaru,
-        status: leadObj.idPegawaiAkses,
+        idJenisPelayanan: leadObj.idJenisPelayanan,
+        kategoriPelayanan: leadObj.kategoriPelayanan,
+        idPegawaiAkses: leadObj.idPegawaiAkses,
       };
       let datafordatabase = {
-        nik: leadObj.nikBaru,
-        namaPegawai: leadObj.namaPegawaiBaru,
-        nip: leadObj.nipBaru,
-        jabatan: leadObj.jabatanBaru,
+        idJenisPelayanan: leadObj.idJenisPelayanan,
+        kategoriPelayanan: leadObj.kategoriPelayanan,
         idPegawaiAkses: leadObj.idPegawaiAkses,
       };
       try {
@@ -63,14 +54,17 @@ function EditManajemenUserModalBody({ extraObject, closeModal }) {
           },
         };
         const response = await axios.put(
-          `/APIHaloKominfoInternal/api/EditDataPegawai/${data.id}`,
+          `/APIHaloKominfoInternal/api/EditKategoriPelayanan/${dataKategori.id}`,
           datafordatabase,
           config
         );
         if (response) {
-          dispatch(editUser({ index, data }));
+          dispatch(editKategoriPelayanan({ index, data }));
           dispatch(
-            showNotification({ message: "User Telah Diedit!", status: 1 })
+            showNotification({
+              message: "Kategori Pelayanan Telah Diedit!",
+              status: 1,
+            })
           );
           closeModal();
         }
@@ -95,47 +89,20 @@ function EditManajemenUserModalBody({ extraObject, closeModal }) {
   return (
     <>
       <InputText
-        type="text"
-        defaultValue={leadObj.namaPegawaiBaru}
-        updateType="namaPegawaiBaru"
-        containerStyle="mt-4"
-        labelTitle="Nama Pegawai"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputText
         type="number"
-        defaultValue={leadObj.nipBaru}
-        updateType="nipBaru"
+        defaultValue={leadObj.idJenisPelayanan}
+        updateType="idJenisPelayanan"
         containerStyle="mt-4"
-        labelTitle="NIP"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputText
-        type="number"
-        defaultValue={leadObj.nikBaru}
-        updateType="nikBaru"
-        containerStyle="mt-4"
-        labelTitle="NIK"
+        labelTitle="Jenis Pelayanan"
         updateFormValue={updateFormValue}
       />
 
       <InputText
         type="text"
-        defaultValue={leadObj.jabatanBaru}
-        updateType="jabatanBaru"
+        defaultValue={leadObj.kategoriPelayanan}
+        updateType="kategoriPelayanan"
         containerStyle="mt-4"
-        labelTitle="Jabatan"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputText
-        type="text"
-        defaultValue={leadObj.idPegawaiAkses}
-        updateType="idPegawaiAkses"
-        containerStyle="mt-4"
-        labelTitle="Akses Pegawai"
+        labelTitle="Kategori Pelayanan"
         updateFormValue={updateFormValue}
       />
 
@@ -152,4 +119,4 @@ function EditManajemenUserModalBody({ extraObject, closeModal }) {
   );
 }
 
-export default EditManajemenUserModalBody;
+export default EditKategoriPelayananModalBody;

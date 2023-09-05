@@ -11,6 +11,8 @@ import AddManajemenOPDModalBody from "../features/manajemenOPD/components/AddMan
 import EditManajemenOPDModalBody from "../features/manajemenOPD/components/EditManajemenOPDModalBody";
 import AddJenisPelayananModalBody from "../features/jenisPelayanan/components/AddJenisPelayananModalBody";
 import EditJenisPelayananModalBody from "../features/jenisPelayanan/components/EditJenisPelayananModalBody";
+import AddKategoriPelayananModalBody from "../features/kategoriPelayanan/components/AddKategoriPelayananModalBody";
+import EditKategoriPelayananModalBody from "../features/kategoriPelayanan/components/EditKategoriPelayananModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -84,6 +86,18 @@ function ModalLayout() {
               ),
               [MODAL_BODY_TYPES.Edit_LEAD_jenisPelayanan_NEW]: (
                 <EditJenisPelayananModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.LEAD_kategoriPelayanan_NEW]: (
+                <AddKategoriPelayananModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.Edit_LEAD_kategoriPelayanan_NEW]: (
+                <EditKategoriPelayananModalBody
                   closeModal={close}
                   extraObject={extraObject}
                 />
