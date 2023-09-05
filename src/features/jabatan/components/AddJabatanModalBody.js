@@ -6,9 +6,11 @@ import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
 import { tambahJabatan } from "../jabatanSlice";
 
+const who_akses = localStorage.getItem("who_akses");
+
 const INITIAL_LEAD_OBJ = {
   namaJabatan: "",
-  idPegawaiAkses: "",
+  idPegawaiAkses: who_akses,
 };
 
 function AddJabatanModalBody({ closeModal }) {
@@ -24,8 +26,8 @@ function AddJabatanModalBody({ closeModal }) {
       return setErrorMessage("Akses Tidak Ada !");
     else {
       let newLeadObj = {
-        NIK: leadObj.idPegawaiAkses,
-        namaPegawai: leadObj.namaJabatan,
+        idPegawaiAkses: leadObj.idPegawaiAkses,
+        namaJabatan: leadObj.namaJabatan,
       };
       let datafordatabase = {
         idPegawaiAkses: leadObj.idPegawaiAkses,

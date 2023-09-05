@@ -4,23 +4,22 @@ import { useDispatch, useSelector } from "react-redux";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
-import { editOPD } from "../manajemenOPDSlice";
+import { editJenisPelayanan } from "../jenisPelayananSlice";
 
-function EditManajemenOPDModalBody({ extraObject, closeModal }) {
+function EditJenisPelayananModalBody({ extraObject, closeModal }) {
   const { index } = extraObject;
-
   const who_akses = localStorage.getItem("who_akses");
 
-  const manajemenOPD = useSelector((state) => state.opd);
+  const jenisPelayanan = useSelector((state) => state.jenisPelayanan);
 
-  const [dataOpd, setData] = useState(
-    manajemenOPD.manajemenOPD.find((data) => data.id === index)
+  const [dataJenisPelayanan, setData] = useState(
+    jenisPelayanan.jenisPelayanan.find((data) => data.id === index)
   );
 
   const dispatch = useDispatch();
 
   const INITIAL_LEAD_OBJ = {
-    namaOpd: dataOpd.namaOpd,
+    jenisPelayanan: dataJenisPelayanan.jenisPelayanan,
     idPegawaiAkses: who_akses,
   };
 
@@ -29,17 +28,17 @@ function EditManajemenOPDModalBody({ extraObject, closeModal }) {
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
 
   const saveNewLead = async () => {
-    if (leadObj.namaOpd.trim() === "")
-      return setErrorMessage("nama OPD Tidak Boleh Kosong !");
+    if (leadObj.jenisPelayanan.trim() === "")
+      return setErrorMessage("Jenis Pelayanan Tidak Boleh Kosong !");
     else if (leadObj.idPegawaiAkses.trim() === "")
-      return setErrorMessage("Akses Pegawai Tidak Ada");
+      return setErrorMessage("Akses Pegawai Tidak Boleh Kosong !");
     else {
       let data = {
-        namaOpd: leadObj.namaOpd,
-        status: leadObj.idPegawaiAkses,
+        jenisPelayanan: leadObj.jenisPelayanan,
+        idPegawaiAkses: leadObj.idPegawaiAkses,
       };
       let datafordatabase = {
-        namaOpd: leadObj.namaOpd,
+        jenisPelayanan: leadObj.jenisPelayanan,
         idPegawaiAkses: leadObj.idPegawaiAkses,
       };
       try {
@@ -50,14 +49,17 @@ function EditManajemenOPDModalBody({ extraObject, closeModal }) {
           },
         };
         const response = await axios.put(
-          `/APIHaloKominfoInternal/api/EditOpd/${dataOpd.id}`,
+          `/APIHaloKominfoInternal/api/EditJenisPelayanan/${dataJenisPelayanan.id}`,
           datafordatabase,
           config
         );
         if (response) {
-          dispatch(editOPD({ index, data }));
+          dispatch(editJenisPelayanan({ index, data }));
           dispatch(
-            showNotification({ message: "OPD Telah Diedit!", status: 1 })
+            showNotification({
+              message: "Jenis Pelayanan Telah Diedit!",
+              status: 1,
+            })
           );
           closeModal();
         }
@@ -83,10 +85,10 @@ function EditManajemenOPDModalBody({ extraObject, closeModal }) {
     <>
       <InputText
         type="text"
-        defaultValue={leadObj.namaOpd}
-        updateType="namaOpd"
+        defaultValue={leadObj.jenisPelayanan}
+        updateType="jenisPelayanan"
         containerStyle="mt-4"
-        labelTitle="Nama Organisasi Perangkat Daerah"
+        labelTitle="Jenis Pelayanan"
         updateFormValue={updateFormValue}
       />
 
@@ -103,4 +105,4 @@ function EditManajemenOPDModalBody({ extraObject, closeModal }) {
   );
 }
 
-export default EditManajemenOPDModalBody;
+export default EditJenisPelayananModalBody;

@@ -8,21 +8,21 @@ import { editUser } from "../manajemenUserSlice";
 
 function EditManajemenUserModalBody({ extraObject, closeModal }) {
   const { index } = extraObject;
-
+  const who_akses = localStorage.getItem("who_akses");
   const manajemenUser = useSelector((state) => state.datamanajemenUser);
 
-  const [data, setData] = useState(
+  const [dataUser, setDataUser] = useState(
     manajemenUser.manajemenUser.find((data) => data.NIK === index)
   );
 
   const dispatch = useDispatch();
 
   const INITIAL_LEAD_OBJ = {
-    namaPegawaiBaru: data.namaPegawai,
-    nipBaru: data.NIP,
-    nikBaru: data.NIK,
-    jabatanBaru: data.jabatan,
-    idPegawaiAkses: data.status,
+    namaPegawaiBaru: dataUser.namaPegawai,
+    nipBaru: dataUser.NIP,
+    nikBaru: dataUser.NIK,
+    jabatanBaru: dataUser.jabatan,
+    idPegawaiAkses: who_akses,
   };
 
   const [loading, setLoading] = useState(false);
@@ -38,14 +38,12 @@ function EditManajemenUserModalBody({ extraObject, closeModal }) {
       return setErrorMessage("NIP Tidak Boleh Kosong !");
     else if (leadObj.jabatanBaru.trim() === "")
       return setErrorMessage("Jabatan Tidak Boleh Kosong !");
-    else if (leadObj.idPegawaiAkses.trim() === "")
-      return setErrorMessage("Akses Pegawai Tidak Boleh Kosong !");
     else {
       let data = {
         NIK: leadObj.nikBaru,
         namaPegawai: leadObj.namaPegawaiBaru,
         NIP: leadObj.nipBaru,
-        jabatanBaru: leadObj.jabatanBaru,
+        jabatan: leadObj.jabatanBaru,
         status: leadObj.idPegawaiAkses,
       };
       let datafordatabase = {
@@ -57,13 +55,14 @@ function EditManajemenUserModalBody({ extraObject, closeModal }) {
       };
       try {
         const token = localStorage.getItem("token");
+
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         };
         const response = await axios.put(
-          `/APIHaloKominfoInternal/api/EditDataPegawai/${data.id}`,
+          `/APIHaloKominfoInternal/api/EditDataPegawai/${dataUser.id}`,
           datafordatabase,
           config
         );
@@ -127,15 +126,6 @@ function EditManajemenUserModalBody({ extraObject, closeModal }) {
         updateType="jabatanBaru"
         containerStyle="mt-4"
         labelTitle="Jabatan"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputText
-        type="text"
-        defaultValue={leadObj.idPegawaiAkses}
-        updateType="idPegawaiAkses"
-        containerStyle="mt-4"
-        labelTitle="Akses Pegawai"
         updateFormValue={updateFormValue}
       />
 

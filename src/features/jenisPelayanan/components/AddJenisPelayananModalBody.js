@@ -1,45 +1,36 @@
 import axios from "axios";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
-import { editOPD } from "../manajemenOPDSlice";
+import { tambahJenisPelayanan } from "../jenisPelayananSlice";
 
-function EditManajemenOPDModalBody({ extraObject, closeModal }) {
-  const { index } = extraObject;
+const who_akses = localStorage.getItem("who_akses");
 
-  const who_akses = localStorage.getItem("who_akses");
+const INITIAL_LEAD_OBJ = {
+  jenisPelayanan: "",
+  idPegawaiAkses: who_akses,
+};
 
-  const manajemenOPD = useSelector((state) => state.opd);
-
-  const [dataOpd, setData] = useState(
-    manajemenOPD.manajemenOPD.find((data) => data.id === index)
-  );
-
+function AddJenisPelayananModalBody({ closeModal }) {
   const dispatch = useDispatch();
-
-  const INITIAL_LEAD_OBJ = {
-    namaOpd: dataOpd.namaOpd,
-    idPegawaiAkses: who_akses,
-  };
-
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
 
   const saveNewLead = async () => {
-    if (leadObj.namaOpd.trim() === "")
-      return setErrorMessage("nama OPD Tidak Boleh Kosong !");
+    if (leadObj.jenisPelayanan.trim() === "")
+      return setErrorMessage("nama Pegawai Tidak Boleh Kosong !");
     else if (leadObj.idPegawaiAkses.trim() === "")
-      return setErrorMessage("Akses Pegawai Tidak Ada");
+      return setErrorMessage("Akses Pegawai Tidak Boleh Kosong !");
     else {
-      let data = {
-        namaOpd: leadObj.namaOpd,
-        status: leadObj.idPegawaiAkses,
+      let newLeadObj = {
+        jenisPelayanan: leadObj.jenisPelayanan,
+        idPegawaiAkses: leadObj.idPegawaiAkses,
       };
       let datafordatabase = {
-        namaOpd: leadObj.namaOpd,
+        jenisPelayanan: leadObj.jenisPelayanan,
         idPegawaiAkses: leadObj.idPegawaiAkses,
       };
       try {
@@ -49,15 +40,18 @@ function EditManajemenOPDModalBody({ extraObject, closeModal }) {
             Authorization: `Bearer ${token}`,
           },
         };
-        const response = await axios.put(
-          `/APIHaloKominfoInternal/api/EditOpd/${dataOpd.id}`,
+        const response = await axios.post(
+          "/APIHaloKominfoInternal/api/TambahJenisPelayanan",
           datafordatabase,
           config
         );
         if (response) {
-          dispatch(editOPD({ index, data }));
+          dispatch(tambahJenisPelayanan({ newLeadObj }));
           dispatch(
-            showNotification({ message: "OPD Telah Diedit!", status: 1 })
+            showNotification({
+              message: "Jenis Pelayanan Telah Ditambahkan!",
+              status: 1,
+            })
           );
           closeModal();
         }
@@ -67,7 +61,7 @@ function EditManajemenOPDModalBody({ extraObject, closeModal }) {
           dispatch(showNotification({ message: "Error Server !", status: 0 }));
         } else {
           dispatch(
-            showNotification({ message: "Data gagal Di Edit", status: 0 })
+            showNotification({ message: "Data gagal Di Tambahkan", status: 0 })
           );
         }
       }
@@ -83,10 +77,10 @@ function EditManajemenOPDModalBody({ extraObject, closeModal }) {
     <>
       <InputText
         type="text"
-        defaultValue={leadObj.namaOpd}
-        updateType="namaOpd"
+        defaultValue={leadObj.jenisPelayanan}
+        updateType="jenisPelayanan"
         containerStyle="mt-4"
-        labelTitle="Nama Organisasi Perangkat Daerah"
+        labelTitle="Jenis Pelayanan"
         updateFormValue={updateFormValue}
       />
 
@@ -103,4 +97,4 @@ function EditManajemenOPDModalBody({ extraObject, closeModal }) {
   );
 }
 
-export default EditManajemenOPDModalBody;
+export default AddJenisPelayananModalBody;

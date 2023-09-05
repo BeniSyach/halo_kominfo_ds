@@ -33,7 +33,7 @@ export const manajemenOPDSlice = createSlice({
     editOPD: (state, action) => {
       let { index, data } = action.payload;
       const OPDIndex = state.manajemenOPD.findIndex(
-        (manajemenOPD) => manajemenOPD.NIK === index
+        (manajemenOPD) => manajemenOPD.id === index
       );
 
       if (OPDIndex !== -1) {

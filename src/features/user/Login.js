@@ -36,6 +36,7 @@ function Login() {
         );
 
         localStorage.setItem("token", response.data.data.token);
+        localStorage.setItem("who_akses", response.data.data.idPegawai);
         setLoading(false);
         window.location.href = "/app/welcome";
       } catch (err) {

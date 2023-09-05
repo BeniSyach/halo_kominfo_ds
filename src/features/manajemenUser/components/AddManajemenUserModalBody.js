@@ -11,7 +11,6 @@ const INITIAL_LEAD_OBJ = {
   nipBaru: "",
   nikBaru: "",
   jabatanBaru: "",
-  idPegawaiAkses: "",
 };
 
 function AddManajemenUserModalBody({ closeModal }) {
@@ -19,6 +18,8 @@ function AddManajemenUserModalBody({ closeModal }) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
+
+  const who_akses = localStorage.getItem("who_akses");
 
   const saveNewLead = async () => {
     if (leadObj.namaPegawaiBaru.trim() === "")
@@ -29,22 +30,20 @@ function AddManajemenUserModalBody({ closeModal }) {
       return setErrorMessage("NIP Tidak Boleh Kosong !");
     else if (leadObj.jabatanBaru.trim() === "")
       return setErrorMessage("Jabatan Tidak Boleh Kosong !");
-    else if (leadObj.idPegawaiAkses.trim() === "")
-      return setErrorMessage("Akses Pegawai Tidak Boleh Kosong !");
     else {
       let newLeadObj = {
         NIK: leadObj.nikBaru,
         namaPegawai: leadObj.namaPegawaiBaru,
         NIP: leadObj.nipBaru,
-        jabatanBaru: leadObj.jabatanBaru,
-        status: leadObj.idPegawaiAkses,
+        jabatan: leadObj.jabatanBaru,
+        status: who_akses,
       };
       let datafordatabase = {
         nikBaru: leadObj.nikBaru,
         namaPegawaiBaru: leadObj.namaPegawaiBaru,
         nipBaru: leadObj.nipBaru,
         jabatanBaru: leadObj.jabatanBaru,
-        idPegawaiAkses: leadObj.idPegawaiAkses,
+        idPegawaiAkses: who_akses,
       };
       try {
         const token = localStorage.getItem("token");
@@ -124,15 +123,6 @@ function AddManajemenUserModalBody({ closeModal }) {
         updateType="jabatanBaru"
         containerStyle="mt-4"
         labelTitle="Jabatan"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputText
-        type="text"
-        defaultValue={leadObj.idPegawaiAkses}
-        updateType="idPegawaiAkses"
-        containerStyle="mt-4"
-        labelTitle="Akses Pegawai"
         updateFormValue={updateFormValue}
       />
 

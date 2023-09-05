@@ -6,9 +6,11 @@ import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
 import { tambahOPD } from "../manajemenOPDSlice";
 
+const who_akses = localStorage.getItem("who_akses");
+
 const INITIAL_LEAD_OBJ = {
   namaOpd: "",
-  idPegawaiAkses: "",
+  idPegawaiAkses: who_akses,
 };
 
 function AddManajemenOPDModalBody({ closeModal }) {

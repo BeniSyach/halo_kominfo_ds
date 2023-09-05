@@ -54,7 +54,7 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
           className="btn px-6 btn-sm normal-case btn-primary"
           onClick={() => openAddNewJabatanModal()}
         >
-          Tambah Jabatan Baru
+          Tambah Jabatan
         </button>
       </div>
       <div className="inline-block float-right  mr-5 ">
@@ -188,7 +188,7 @@ function Jabatan() {
                     <td>
                       <button
                         className="btn btn-square btn-ghost"
-                        onClick={() => editJabatan(l.NIK)}
+                        onClick={() => editJabatan(l.id)}
                       >
                         <PencilIcon className="w-5" />
                       </button>

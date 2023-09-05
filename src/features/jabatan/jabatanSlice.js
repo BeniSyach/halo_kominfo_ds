@@ -33,7 +33,7 @@ export const jabatanSlice = createSlice({
     editJabatan: (state, action) => {
       let { index, data } = action.payload;
       const userIndex = state.jabatan.findIndex(
-        (jabatan) => jabatan.NIK === index
+        (jabatan) => jabatan.id === index
       );
 
       if (userIndex !== -1) {

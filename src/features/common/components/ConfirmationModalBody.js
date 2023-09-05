@@ -14,19 +14,22 @@ function ConfirmationModalBody({ extraObject, closeModal }) {
 
   const { message, type, id, index, aksi } = extraObject;
 
+  const token = localStorage.getItem("token");
+  const who_akses = localStorage.getItem("who_akses");
+
   const proceedWithYes = async () => {
     if (type === CONFIRMATION_MODAL_CLOSE_TYPES.LEAD_DELETE) {
       // positive response, call api or dispatch redux function
       if (aksi === "ManajemenUser") {
         try {
-          const token = localStorage.getItem("token");
           const config = {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           };
-          const response = await axios.put(
+          const response = await axios.delete(
             `/APIHaloKominfoInternal/api/HapusPegawai/${id}`,
+            { idPegawaiAkses: who_akses },
             config
           );
           if (response) {
@@ -44,13 +47,12 @@ function ConfirmationModalBody({ extraObject, closeModal }) {
         }
       } else if (aksi === "jabatan") {
         try {
-          const token = localStorage.getItem("token");
           const config = {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           };
-          const response = await axios.put(
+          const response = await axios.delete(
             `/APIHaloKominfoInternal/api/HapusJabatan/${id}`,
             config
           );
@@ -69,13 +71,12 @@ function ConfirmationModalBody({ extraObject, closeModal }) {
         }
       } else if (aksi === "ManajemenOPD") {
         try {
-          const token = localStorage.getItem("token");
           const config = {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           };
-          const response = await axios.put(
+          const response = await axios.delete(
             `/APIHaloKominfoInternal/api/HapusOpd/${id}`,
             config
           );

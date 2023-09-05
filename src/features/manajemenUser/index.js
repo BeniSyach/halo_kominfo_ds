@@ -180,7 +180,7 @@ function ManajemenUser() {
                 <th>Nama Pegawai</th>
                 <th>NIP</th>
                 <th>NIK</th>
-                <th>Status</th>
+                <th>Jabatan</th>
                 <th>#</th>
               </tr>
             </thead>
@@ -192,7 +192,7 @@ function ManajemenUser() {
                     <td>{l.namaPegawai}</td>
                     <td>{l.NIP}</td>
                     <td>{l.NIK}</td>
-                    <td>{l.status}</td>
+                    <td>{l.jabatan}</td>
                     <td>
                       <button
                         className="btn btn-square btn-ghost"

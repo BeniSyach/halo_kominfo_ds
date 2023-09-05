@@ -11,15 +11,17 @@ function EditJabatanModalBody({ extraObject, closeModal }) {
 
   const jabatan = useSelector((state) => state.jabatan);
 
-  const [data, setData] = useState(
-    jabatan.jabatan.find((data) => data.NIK === index)
+  const [dataJabatan, setData] = useState(
+    jabatan.jabatan.find((data) => data.id === index)
   );
 
   const dispatch = useDispatch();
 
+  const who_akses = localStorage.getItem("who_akses");
+
   const INITIAL_LEAD_OBJ = {
-    namaJabatan: "",
-    idPegawaiAkses: "",
+    namaJabatan: dataJabatan.namaJabatan,
+    idPegawaiAkses: who_akses,
   };
 
   const [loading, setLoading] = useState(false);
@@ -32,9 +34,9 @@ function EditJabatanModalBody({ extraObject, closeModal }) {
     else if (leadObj.idPegawaiAkses.trim() === "")
       return setErrorMessage("Akses Tidak Ada !");
     else {
-      let dataJabatan = {
-        NIK: leadObj.idPegawaiAkses,
-        namaPegawai: leadObj.namaJabatan,
+      let data = {
+        idPegawaiAkses: leadObj.idPegawaiAkses,
+        namaJabatan: leadObj.namaJabatan,
       };
       let datafordatabase = {
         idPegawaiAkses: leadObj.idPegawaiAkses,
@@ -48,12 +50,12 @@ function EditJabatanModalBody({ extraObject, closeModal }) {
           },
         };
         const response = await axios.put(
-          `/APIHaloKominfoInternal/api/EditJabatan/${data.id}`,
+          `/APIHaloKominfoInternal/api/EditJabatan/${dataJabatan.id}`,
           datafordatabase,
           config
         );
         if (response) {
-          dispatch(editJabatan({ index, dataJabatan }));
+          dispatch(editJabatan({ index, data }));
           dispatch(
             showNotification({ message: "Jabatan Telah Diedit!", status: 1 })
           );

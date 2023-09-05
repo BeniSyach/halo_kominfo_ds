@@ -8,6 +8,8 @@ module.exports = Object.freeze({
     Edit_jabatan_NEW: "Edit_jabatan_NEW",
     add_manajemen_OPD: "add_manajemen_OPD",
     edit_manajemen_OPD: "edit_manajemen_OPD",
+    LEAD_jenisPelayanan_NEW: "LEAD_jenisPelayanan_NEW",
+    Edit_LEAD_jenisPelayanan_NEW: "Edit_LEAD_jenisPelayanan_NEW",
     CONFIRMATION: "CONFIRMATION",
     DEFAULT: "",
   },
