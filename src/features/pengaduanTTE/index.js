@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
 import { openModal } from "../common/modalSlice";
-import { deleteLead, getmanajemenUserContent } from "./manajemenUserSlice";
 import {
   CONFIRMATION_MODAL_CLOSE_TYPES,
   MODAL_BODY_TYPES,
@@ -14,6 +13,7 @@ import { showNotification } from "../common/headerSlice";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import SearchBar from "../../components/Input/SearchBar";
+import { getPengaduanTTEContent } from "./pengaduanTTESlice";
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const dispatch = useDispatch();
@@ -43,8 +43,8 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Tambah User",
-        bodyType: MODAL_BODY_TYPES.LEAD_ManajemenUser_NEW,
+        title: "Tambah Pengaduan TTE",
+        bodyType: MODAL_BODY_TYPES.LEAD_pengaduanTTE_NEW,
       })
     );
   };
@@ -56,7 +56,7 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
           className="btn px-6 btn-sm normal-case btn-primary"
           onClick={() => openAddNewLeadModal()}
         >
-          Tambah User Baru
+          Tambah Pengaduan TTE
         </button>
       </div>
       <div className="inline-block float-right  mr-5 ">
@@ -99,21 +99,21 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   );
 };
 
-function ManajemenUser() {
-  const { manajemenUser } = useSelector((state) => state.datamanajemenUser);
+function PengaduanTTE() {
+  const { pengaduanTTE } = useSelector((state) => state.pengaduanTTE);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getmanajemenUserContent());
+    dispatch(getPengaduanTTEContent());
   }, [dispatch]);
 
-  const [data, Setdata] = useState(manajemenUser);
+  const [data, Setdata] = useState(pengaduanTTE);
   const removeFilter = () => {
-    Setdata(manajemenUser);
+    Setdata(pengaduanTTE);
   };
 
   const applyFilter = (params) => {
-    let filteredData = manajemenUser.filter((t) => {
+    let filteredData = pengaduanTTE.filter((t) => {
       return t.location == params;
     });
     Setdata(filteredData);
@@ -121,7 +121,7 @@ function ManajemenUser() {
 
   // Search according to name
   const applySearch = (value) => {
-    let filteredData = manajemenUser.filter((t) => {
+    let filteredData = pengaduanTTE.filter((t) => {
       return (
         t.namaPegawai.toLowerCase().includes(value.toLowerCase()) ||
         t.namaPegawai.toLowerCase().includes(value.toLowerCase())
@@ -133,8 +133,8 @@ function ManajemenUser() {
   const editCurrentLead = (index, data) => {
     dispatch(
       openModal({
-        title: "Edit User",
-        bodyType: MODAL_BODY_TYPES.Edit_LEAD_ManajemenUser_NEW,
+        title: "Edit Pengaduan TTE",
+        bodyType: MODAL_BODY_TYPES.Edit_LEAD_pengaduanTTE_NEW,
         extraObject: {
           index,
           data,
@@ -162,7 +162,7 @@ function ManajemenUser() {
   return (
     <>
       <TitleCard
-        title="Manajemen User"
+        title="Form Pengaduan TTE"
         topMargin="mt-2"
         TopSideButtons={
           <TopSideButtons
@@ -178,32 +178,36 @@ function ManajemenUser() {
               <tr>
                 <th>No</th>
                 <th>Nama Pegawai</th>
-                <th>NIP</th>
-                <th>NIK</th>
+                <th>Tanggal Pelayanan</th>
+                <th>Kategori Pelayanan</th>
+                <th>Nama Customer</th>
+                <th>OPD</th>
                 <th>Status</th>
                 <th>#</th>
               </tr>
             </thead>
             <tbody>
-              {manajemenUser.map((l, k) => {
+              {pengaduanTTE.map((l, k) => {
                 return (
                   <tr key={k}>
                     <td>{k + 1}</td>
-                    <td>{l.namaPegawai}</td>
-                    <td>{l.NIP}</td>
-                    <td>{l.NIK}</td>
-                    <td>{l.status}</td>
+                    <td>{l.idPegawai}</td>
+                    <td>{l.tanggalPelayanan}</td>
+                    <td>{l.kategoriPelayanan}</td>
+                    <td>{l.namaCustomer}</td>
+                    <td>{l.opd}</td>
+                    <td>{l.statusPelayanan}</td>
                     <td>
                       <button
                         className="btn btn-square btn-ghost"
-                        onClick={() => editCurrentLead(l.NIK)}
+                        onClick={() => editCurrentLead(l.idPelayanan)}
                       >
                         <PencilIcon className="w-5" />
                       </button>
                       <button
                         className="btn btn-square btn-ghost"
                         onClick={() =>
-                          deleteCurrentLead(l.id, k, "ManajemenUser")
+                          deleteCurrentLead(l.idPelayanan, k, "pengaduanTTE")
                         }
                       >
                         <TrashIcon className="w-5" />
@@ -220,4 +224,4 @@ function ManajemenUser() {
   );
 }
 
-export default ManajemenUser;
+export default PengaduanTTE;

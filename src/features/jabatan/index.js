@@ -188,13 +188,15 @@ function Jabatan() {
                     <td>
                       <button
                         className="btn btn-square btn-ghost"
-                        onClick={() => editJabatan(l.id)}
+                        onClick={() => editJabatan(l.idMasterJabatan)}
                       >
                         <PencilIcon className="w-5" />
                       </button>
                       <button
                         className="btn btn-square btn-ghost"
-                        onClick={() => hapusJabatan(l.id, k, "jabatan")}
+                        onClick={() =>
+                          hapusJabatan(l.idMasterJabatan, k, "jabatan")
+                        }
                       >
                         <TrashIcon className="w-5" />
                       </button>

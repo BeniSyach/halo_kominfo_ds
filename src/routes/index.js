@@ -6,6 +6,9 @@ const Dashboard = lazy(() => import("../pages/protected/Dashboard"));
 const Welcome = lazy(() => import("../pages/protected/Welcome"));
 const Page404 = lazy(() => import("../pages/protected/404"));
 const PengaduanTTE = lazy(() => import("../pages/protected/PengaduanTTE"));
+const PengaduanJaringan = lazy(() =>
+  import("../pages/protected/PengaduanJaringan")
+);
 const ManajemenUser = lazy(() => import("../pages/protected/ManajemenUser"));
 const ProfileSettings = lazy(() =>
   import("../pages/protected/ProfileSettings")
@@ -33,6 +36,10 @@ const routes = [
   {
     path: "/pengaduanTTE",
     component: PengaduanTTE,
+  },
+  {
+    path: "/pengaduanJaringan",
+    component: PengaduanJaringan,
   },
   {
     path: "/settings-profile",

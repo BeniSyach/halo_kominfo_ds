@@ -33,7 +33,7 @@ const routes = [
         name: "Pengaduan TTE",
       },
       {
-        path: "/app/leads", //url
+        path: "/app/pengaduanJaringan", //url
         icon: <BoltIcon className={submenuIconClasses} />, // icon component
         name: "Pengaduan Jaringan", // name that appear in Sidebar
       },

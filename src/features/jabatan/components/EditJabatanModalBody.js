@@ -12,7 +12,7 @@ function EditJabatanModalBody({ extraObject, closeModal }) {
   const jabatan = useSelector((state) => state.jabatan);
 
   const [dataJabatan, setData] = useState(
-    jabatan.jabatan.find((data) => data.id === index)
+    jabatan.jabatan.find((data) => data.idMasterJabatan === index)
   );
 
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ function EditJabatanModalBody({ extraObject, closeModal }) {
           },
         };
         const response = await axios.put(
-          `/APIHaloKominfoInternal/api/EditJabatan/${dataJabatan.id}`,
+          `/APIHaloKominfoInternal/api/EditJabatan/${dataJabatan.idMasterJabatan}`,
           datafordatabase,
           config
         );

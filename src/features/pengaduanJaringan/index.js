@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TitleCard from "../../components/Cards/TitleCard";
 import { openModal } from "../common/modalSlice";
-import { deleteLead, getmanajemenUserContent } from "./manajemenUserSlice";
 import {
   CONFIRMATION_MODAL_CLOSE_TYPES,
   MODAL_BODY_TYPES,
@@ -14,6 +13,8 @@ import { showNotification } from "../common/headerSlice";
 import FunnelIcon from "@heroicons/react/24/outline/FunnelIcon";
 import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import SearchBar from "../../components/Input/SearchBar";
+import { getPengaduanTTEContent } from "../pengaduanTTE/pengaduanTTESlice";
+import { getPengaduanJaringanContent } from "./pengaduanJaringanSlice";
 
 const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const dispatch = useDispatch();
@@ -43,8 +44,8 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Tambah User",
-        bodyType: MODAL_BODY_TYPES.LEAD_ManajemenUser_NEW,
+        title: "Tambah Pengaduan Jaringan",
+        bodyType: MODAL_BODY_TYPES.LEAD_pengaduanJaringan_NEW,
       })
     );
   };
@@ -56,7 +57,7 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
           className="btn px-6 btn-sm normal-case btn-primary"
           onClick={() => openAddNewLeadModal()}
         >
-          Tambah User Baru
+          Tambah Pengaduan Jaringan
         </button>
       </div>
       <div className="inline-block float-right  mr-5 ">
@@ -99,21 +100,21 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   );
 };
 
-function ManajemenUser() {
-  const { manajemenUser } = useSelector((state) => state.datamanajemenUser);
+function PengaduanJaringan() {
+  const { pengaduanJaringan } = useSelector((state) => state.pengaduanJaringan);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getmanajemenUserContent());
+    dispatch(getPengaduanJaringanContent());
   }, [dispatch]);
 
-  const [data, Setdata] = useState(manajemenUser);
+  const [data, Setdata] = useState(pengaduanJaringan);
   const removeFilter = () => {
-    Setdata(manajemenUser);
+    Setdata(pengaduanJaringan);
   };
 
   const applyFilter = (params) => {
-    let filteredData = manajemenUser.filter((t) => {
+    let filteredData = pengaduanJaringan.filter((t) => {
       return t.location == params;
     });
     Setdata(filteredData);
@@ -121,7 +122,7 @@ function ManajemenUser() {
 
   // Search according to name
   const applySearch = (value) => {
-    let filteredData = manajemenUser.filter((t) => {
+    let filteredData = pengaduanJaringan.filter((t) => {
       return (
         t.namaPegawai.toLowerCase().includes(value.toLowerCase()) ||
         t.namaPegawai.toLowerCase().includes(value.toLowerCase())
@@ -134,7 +135,7 @@ function ManajemenUser() {
     dispatch(
       openModal({
         title: "Edit User",
-        bodyType: MODAL_BODY_TYPES.Edit_LEAD_ManajemenUser_NEW,
+        bodyType: MODAL_BODY_TYPES.Edit_LEAD_pengaduanJaringan_NEW,
         extraObject: {
           index,
           data,
@@ -162,7 +163,7 @@ function ManajemenUser() {
   return (
     <>
       <TitleCard
-        title="Manajemen User"
+        title="Form Pengaduan Jaringan"
         topMargin="mt-2"
         TopSideButtons={
           <TopSideButtons
@@ -185,7 +186,7 @@ function ManajemenUser() {
               </tr>
             </thead>
             <tbody>
-              {manajemenUser.map((l, k) => {
+              {pengaduanJaringan.map((l, k) => {
                 return (
                   <tr key={k}>
                     <td>{k + 1}</td>
@@ -196,14 +197,18 @@ function ManajemenUser() {
                     <td>
                       <button
                         className="btn btn-square btn-ghost"
-                        onClick={() => editCurrentLead(l.NIK)}
+                        onClick={() => editCurrentLead(l.idPengaduan)}
                       >
                         <PencilIcon className="w-5" />
                       </button>
                       <button
                         className="btn btn-square btn-ghost"
                         onClick={() =>
-                          deleteCurrentLead(l.id, k, "ManajemenUser")
+                          deleteCurrentLead(
+                            l.idPengaduan,
+                            k,
+                            "pengaduanJaringan"
+                          )
                         }
                       >
                         <TrashIcon className="w-5" />
@@ -220,4 +225,4 @@ function ManajemenUser() {
   );
 }
 
-export default ManajemenUser;
+export default PengaduanJaringan;

@@ -7,6 +7,8 @@ import jenisPelayananSlice from "../features/jenisPelayanan/jenisPelayananSlice"
 import kategoriPelayananSlice from "../features/kategoriPelayanan/kategoriPelayananSlice";
 import manajemenOPDSlice from "../features/manajemenOPD/manajemenOPDSlice";
 import manajemenUserSlice from "../features/manajemenUser/manajemenUserSlice";
+import pengaduanTTESlice from "../features/pengaduanTTE/pengaduanTTESlice";
+import pengaduanJaringanSlice from "../features/pengaduanJaringan/pengaduanJaringanSlice";
 
 const combinedReducer = {
   header: headerSlice,
@@ -17,6 +19,8 @@ const combinedReducer = {
   opd: manajemenOPDSlice,
   jenisPelayanan: jenisPelayananSlice,
   kategoriPelayanan: kategoriPelayananSlice,
+  pengaduanTTE: pengaduanTTESlice,
+  pengaduanJaringan: pengaduanJaringanSlice,
 };
 
 export default configureStore({
