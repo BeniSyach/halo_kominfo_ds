@@ -20,9 +20,9 @@ function Login() {
     setErrorMessage("");
 
     if (loginObj.emailId.trim() === "")
-      return setErrorMessage("Email Id is required! (use any value)");
+      return setErrorMessage("NIK Tidak Boleh Kosong");
     if (loginObj.password.trim() === "")
-      return setErrorMessage("Password is required! (use any value)");
+      return setErrorMessage("Password Tidak Boleh Koson");
     else {
       setLoading(true);
       try {
@@ -94,14 +94,14 @@ function Login() {
               Login
             </button>
 
-            {/* <div className="text-center mt-4">
-              Don't have an account yet?{" "}
-              <Link to="/register">
-                <span className="  inline-block  hover:text-primary hover:underline hover:cursor-pointer transition duration-200">
-                  Register
+            <div className="text-center mt-4">
+              {/* Don't have an account yet?{" "} */}
+              <Link to="/bukuTamu">
+                <span className="  inline-block  hover:text-white hover:underline hover:cursor-pointer transition duration-200">
+                  Buku Tamu
                 </span>
               </Link>
-            </div> */}
+            </div>
           </form>
         </div>
       </div>

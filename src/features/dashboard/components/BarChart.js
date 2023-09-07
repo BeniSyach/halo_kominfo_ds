@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -7,6 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import TitleCard from "../../../components/Cards/TitleCard";
 
@@ -19,7 +21,26 @@ ChartJS.register(
   Legend
 );
 
-function BarChart() {
+function BarChart(prop) {
+  const getTotalPengaduan = async () => {
+    const responseUser = await axios.get(
+      `/APIHaloKominfoInternal/api/PengaduanByTahun/${prop.dataTahun}`
+    );
+    return responseUser.data.data;
+  };
+  const [dataTotalPengaduan, setTotalPengaduanData] = useState([]);
+
+  useEffect(() => {
+    getTotalPengaduan()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setTotalPengaduanData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+  }, [prop]);
+
   const options = {
     responsive: true,
     plugins: {
@@ -49,9 +70,7 @@ function BarChart() {
     datasets: [
       {
         label: "Jumlah Pengaduan Internet",
-        data: labels.map(() => {
-          return Math.random() * 1000 + 500;
-        }),
+        data: dataTotalPengaduan,
         backgroundColor: "rgba(53, 162, 235, 1)",
       },
     ],

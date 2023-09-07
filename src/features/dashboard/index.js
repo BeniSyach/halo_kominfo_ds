@@ -16,6 +16,7 @@ import BanyakPengaduanTTE from "./components/BanyakPengaduanTTE";
 import BanyakPengaduanInternet from "./components/BanyakPengaduanInternet";
 import axios from "axios";
 import { useEffect } from "react";
+import moment from "moment/moment";
 
 function Dashboard() {
   const dispatch = useDispatch();
@@ -114,11 +115,14 @@ function Dashboard() {
     },
   ];
 
+  const [tahun, setTahun] = useState(new Date());
+
   const updateDashboardPeriod = (newRange) => {
     // Dashboard range changed, write code to refresh your values
+    setTahun(newRange);
     dispatch(
       showNotification({
-        message: `Period updated to ${newRange.startDate} to ${newRange.endDate}`,
+        message: `di ganti ke tahun ${newRange}`,
         status: 1,
       })
     );
@@ -138,8 +142,8 @@ function Dashboard() {
 
       {/** ---------------------- Different charts ------------------------- */}
       <div className="grid lg:grid-cols-1 mt-4 grid-cols-1 gap-6">
-        <LineChart />
-        <BarChart />
+        <LineChart dataTahun={moment(tahun).format("YYYY")} />
+        <BarChart dataTahun={moment(tahun).format("YYYY")} />
       </div>
 
       {/** ---------------------- Different stats content 2 ------------------------- */}

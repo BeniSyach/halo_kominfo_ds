@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,6 +10,8 @@ import {
   Filler,
   Legend,
 } from "chart.js";
+import { useEffect } from "react";
+import { useState } from "react";
 import { Line } from "react-chartjs-2";
 import TitleCard from "../../../components/Cards/TitleCard";
 
@@ -23,7 +26,26 @@ ChartJS.register(
   Legend
 );
 
-function LineChart() {
+function LineChart(prop) {
+  const getTotalPengaduan = async () => {
+    const responseUser = await axios.get(
+      `/APIHaloKominfoInternal/api/PelayananByTahun/${prop.dataTahun}`
+    );
+    return responseUser.data.data;
+  };
+  const [dataTotalPengaduan, setTotalPengaduanData] = useState([]);
+
+  useEffect(() => {
+    getTotalPengaduan()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setTotalPengaduanData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+  }, [prop]);
+
   const options = {
     responsive: true,
     plugins: {
@@ -54,9 +76,7 @@ function LineChart() {
       {
         fill: true,
         label: "Jumlah Pengaduan TTE",
-        data: labels.map(() => {
-          return Math.random() * 100 + 500;
-        }),
+        data: dataTotalPengaduan,
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },

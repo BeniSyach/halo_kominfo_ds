@@ -13,6 +13,7 @@ import initializeApp from "./app/init";
 // Importing pages
 const Layout = lazy(() => import("./containers/Layout"));
 const Login = lazy(() => import("./pages/Login"));
+const BukuTamu = lazy(() => import("./pages/buku_tamu"));
 
 // Initializing different libraries
 initializeApp();
@@ -31,6 +32,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/bukuTamu" element={<BukuTamu />} />
 
           {/* Place new routes over this */}
           <Route path="/app/*" element={<Layout />} />

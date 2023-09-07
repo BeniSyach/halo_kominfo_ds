@@ -16,6 +16,7 @@ const ProfileSettings = lazy(() =>
 const Jabatan = lazy(() => import("../pages/protected/Jabatan"));
 const ManajemenOPD = lazy(() => import("../pages/protected/ManajemenOPD"));
 const JenisPelayanan = lazy(() => import("../pages/protected/JenisPelayanan"));
+const BukuTamu = lazy(() => import("../pages/buku_tamu"));
 const KategoriPelayanan = lazy(() =>
   import("../pages/protected/KategoriPelayanan")
 );
@@ -61,6 +62,10 @@ const routes = [
   {
     path: "/kategori_pelayanan",
     component: KategoriPelayanan,
+  },
+  {
+    path: "/buku_tamu",
+    component: BukuTamu,
   },
 
   {

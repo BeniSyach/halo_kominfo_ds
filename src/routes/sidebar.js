@@ -7,6 +7,7 @@ import TableCellsIcon from "@heroicons/react/24/outline/TableCellsIcon";
 import DocumentIcon from "@heroicons/react/24/outline/DocumentIcon";
 import DocumentTextIcon from "@heroicons/react/24/outline/DocumentTextIcon";
 import WalletIcon from "@heroicons/react/24/outline/WalletIcon";
+import BookOpenIcon from "@heroicons/react/24/outline/BookOpenIcon";
 
 const iconClasses = `h-6 w-6`;
 const submenuIconClasses = `h-5 w-5`;
@@ -58,6 +59,11 @@ const routes = [
     path: "/app/kategori_pelayanan", // url
     icon: <WalletIcon className={iconClasses} />, // icon component
     name: "Kategori Pelayanan", // name that appear in Sidebar
+  },
+  {
+    path: "/app/buku_tamu", // url
+    icon: <BookOpenIcon className={iconClasses} />, // icon component
+    name: "Buku Tamu", // name that appear in Sidebar
   },
 ];
 
