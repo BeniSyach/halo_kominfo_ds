@@ -4,46 +4,58 @@ import { useDispatch } from "react-redux";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
-import { tambahUser } from "../manajemenUserSlice";
+import { tambahPengaduanJaringan } from "../pengaduanJaringanSlice";
+
+const who_akses = localStorage.getItem("who_akses");
 
 const INITIAL_LEAD_OBJ = {
-  namaPegawaiBaru: "",
-  nipBaru: "",
-  nikBaru: "",
-  jabatanBaru: "",
-  idPegawaiAkses: "",
+  idPegawai: "",
+  tanggalPengaduan: "",
+  keteranganPengaduan: "",
+  statusPengaduan: "",
+  kegiatanPengaduan: "",
+  opd: "",
+  idPegawaiAkses: who_akses,
 };
 
-function AddManajemenUserModalBody({ closeModal }) {
+function AddPengaduanJaringanModalBody({ closeModal }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
 
   const saveNewLead = async () => {
-    if (leadObj.namaPegawaiBaru.trim() === "")
+    if (leadObj.idPegawai.trim() === "")
       return setErrorMessage("nama Pegawai Tidak Boleh Kosong !");
-    else if (leadObj.nikBaru.trim() === "")
-      return setErrorMessage("NIK Tidak Boleh Kosong !");
-    else if (leadObj.nipBaru.trim() === "")
-      return setErrorMessage("NIP Tidak Boleh Kosong !");
-    else if (leadObj.jabatanBaru.trim() === "")
-      return setErrorMessage("Jabatan Tidak Boleh Kosong !");
+    else if (leadObj.keteranganPengaduan.trim() === "")
+      return setErrorMessage("Keterangan Pengaduan Tidak Boleh Kosong !");
+    else if (leadObj.tanggalPengaduan.trim() === "")
+      return setErrorMessage("Tanggal Pengaduan Tidak Boleh Kosong !");
+    else if (leadObj.statusPengaduan.trim() === "")
+      return setErrorMessage("Status Pengaduan Tidak Boleh Kosong !");
+    else if (leadObj.kegiatanPengaduan.trim() === "")
+      return setErrorMessage("Kegiatan Tidak Boleh Kosong !");
+    else if (leadObj.opd.trim() === "")
+      return setErrorMessage("OPD Tidak Boleh Kosong !");
     else if (leadObj.idPegawaiAkses.trim() === "")
       return setErrorMessage("Akses Pegawai Tidak Boleh Kosong !");
     else {
       let newLeadObj = {
-        NIK: leadObj.nikBaru,
-        namaPegawai: leadObj.namaPegawaiBaru,
-        NIP: leadObj.nipBaru,
-        jabatanBaru: leadObj.jabatanBaru,
-        status: leadObj.idPegawaiAkses,
+        keteranganPengaduan: leadObj.keteranganPengaduan,
+        idPegawai: leadObj.idPegawai,
+        tanggalPengaduan: leadObj.tanggalPengaduan,
+        statusPengaduan: leadObj.statusPengaduan,
+        kegiatanPengaduan: leadObj.kegiatanPengaduan,
+        opd: leadObj.opd,
+        idPegawaiAkses: leadObj.idPegawaiAkses,
       };
       let datafordatabase = {
-        nikBaru: leadObj.nikBaru,
-        namaPegawaiBaru: leadObj.namaPegawaiBaru,
-        nipBaru: leadObj.nipBaru,
-        jabatanBaru: leadObj.jabatanBaru,
+        idPegawai: leadObj.idPegawai,
+        tanggalPengaduan: leadObj.tanggalPengaduan,
+        statusPengaduan: leadObj.statusPengaduan,
+        keteranganPengaduan: leadObj.keteranganPengaduan,
+        kegiatanPengaduan: leadObj.kegiatanPengaduan,
+        opd: leadObj.opd,
         idPegawaiAkses: leadObj.idPegawaiAkses,
       };
       try {
@@ -54,14 +66,17 @@ function AddManajemenUserModalBody({ closeModal }) {
           },
         };
         const response = await axios.post(
-          "/APIHaloKominfoInternal/api/TambahPegawai",
+          "/APIHaloKominfoInternal/api/TambahPengaduan",
           datafordatabase,
           config
         );
         if (response) {
-          dispatch(tambahUser({ newLeadObj }));
+          dispatch(tambahPengaduanJaringan({ newLeadObj }));
           dispatch(
-            showNotification({ message: "User Telah Ditambahkan!", status: 1 })
+            showNotification({
+              message: "Pengaduan Telah Ditambahkan!",
+              status: 1,
+            })
           );
           closeModal();
         }
@@ -85,54 +100,57 @@ function AddManajemenUserModalBody({ closeModal }) {
 
   return (
     <>
-      <div className="inline-block float-left">
-        <button className="btn px-6 mb-2 btn-sm normal-case btn-warning">
-          Import Data
-        </button>
-      </div>
-
       <InputText
         type="text"
-        defaultValue={leadObj.namaPegawaiBaru}
-        updateType="namaPegawaiBaru"
+        defaultValue={leadObj.idPegawai}
+        updateType="idPegawai"
         containerStyle="mt-4"
         labelTitle="Nama Pegawai"
         updateFormValue={updateFormValue}
       />
 
       <InputText
-        type="number"
-        defaultValue={leadObj.nipBaru}
-        updateType="nipBaru"
+        type="date"
+        defaultValue={leadObj.tanggalPengaduan}
+        updateType="tanggalPengaduan"
         containerStyle="mt-4"
-        labelTitle="NIP"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputText
-        type="number"
-        defaultValue={leadObj.nikBaru}
-        updateType="nikBaru"
-        containerStyle="mt-4"
-        labelTitle="NIK"
-        updateFormValue={updateFormValue}
-      />
-
-      <InputText
-        type="jabatanBaru"
-        defaultValue={leadObj.jabatanBaru}
-        updateType="jabatanBaru"
-        containerStyle="mt-4"
-        labelTitle="Jabatan"
+        labelTitle="Tanggal Pengaduan"
         updateFormValue={updateFormValue}
       />
 
       <InputText
         type="text"
-        defaultValue={leadObj.idPegawaiAkses}
-        updateType="idPegawaiAkses"
+        defaultValue={leadObj.keteranganPengaduan}
+        updateType="keteranganPengaduan"
         containerStyle="mt-4"
-        labelTitle="Akses Pegawai"
+        labelTitle="Keterangan Pengaduan"
+        updateFormValue={updateFormValue}
+      />
+
+      <InputText
+        type="text"
+        defaultValue={leadObj.statusPengaduan}
+        updateType="statusPengaduan"
+        containerStyle="mt-4"
+        labelTitle="Status Pengaduan"
+        updateFormValue={updateFormValue}
+      />
+
+      <InputText
+        type="text"
+        defaultValue={leadObj.kegiatanPengaduan}
+        updateType="kegiatanPengaduan"
+        containerStyle="mt-4"
+        labelTitle="Kegiatan pengaduan"
+        updateFormValue={updateFormValue}
+      />
+
+      <InputText
+        type="text"
+        defaultValue={leadObj.opd}
+        updateType="opd"
+        containerStyle="mt-4"
+        labelTitle="OPD"
         updateFormValue={updateFormValue}
       />
 
@@ -149,4 +167,4 @@ function AddManajemenUserModalBody({ closeModal }) {
   );
 }
 
-export default AddManajemenUserModalBody;
+export default AddPengaduanJaringanModalBody;

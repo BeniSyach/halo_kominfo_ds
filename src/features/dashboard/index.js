@@ -14,36 +14,105 @@ import { showNotification } from "../common/headerSlice";
 import { useState } from "react";
 import BanyakPengaduanTTE from "./components/BanyakPengaduanTTE";
 import BanyakPengaduanInternet from "./components/BanyakPengaduanInternet";
-
-const statsData = [
-  {
-    title: "Jumlah Users",
-    value: "1",
-    icon: <UserGroupIcon className="w-8 h-8" />,
-    description: "",
-  },
-  {
-    title: "Pengaduan TTE",
-    value: "0",
-    icon: <CreditCardIcon className="w-8 h-8" />,
-    description: "Tahun Ini",
-  },
-  {
-    title: "Pengaduan Internet",
-    value: "0",
-    icon: <CircleStackIcon className="w-8 h-8" />,
-    description: "Tahun Ini",
-  },
-  {
-    title: "Total Pengaduan",
-    value: "0",
-    icon: <UsersIcon className="w-8 h-8" />,
-    description: "Tahun Ini",
-  },
-];
+import axios from "axios";
+import { useEffect } from "react";
 
 function Dashboard() {
   const dispatch = useDispatch();
+
+  const getUsers = async () => {
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/JumlahPegawai"
+    );
+    return responseUser.data.data;
+  };
+  const [dataUser, setUserData] = useState("");
+
+  const getJumlahPelayanan = async () => {
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/JumlahLaporanPelayanan"
+    );
+    return responseUser.data.data;
+  };
+  const [dataJumlahPelayanan, setJumlahPelayananData] = useState("");
+
+  const getPengaduanInternet = async () => {
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/JumlahLaporanPengaduan"
+    );
+    return responseUser.data.data;
+  };
+  const [dataPengaduanInternet, setPengaduanInternetData] = useState("");
+
+  const getTotalPengaduan = async () => {
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/JumlahSeluruhPengaduanPelayanan"
+    );
+    return responseUser.data.data;
+  };
+  const [dataTotalPengaduan, setTotalPengaduanData] = useState("");
+
+  useEffect(() => {
+    getUsers()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setUserData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+    getJumlahPelayanan()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setJumlahPelayananData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+    getPengaduanInternet()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setPengaduanInternetData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+    getTotalPengaduan()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setTotalPengaduanData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+  }, []);
+
+  const statsData = [
+    {
+      title: "Jumlah Users",
+      value: dataUser.jumlahPegawai,
+      icon: <UserGroupIcon className="w-8 h-8" />,
+      description: "",
+    },
+    {
+      title: "Pengaduan TTE",
+      value: dataJumlahPelayanan.jumlahPelyanan,
+      icon: <CreditCardIcon className="w-8 h-8" />,
+      description: "Tahun Ini",
+    },
+    {
+      title: "Pengaduan Internet",
+      value: dataPengaduanInternet.jumlahPengaduan,
+      icon: <CircleStackIcon className="w-8 h-8" />,
+      description: "Tahun Ini",
+    },
+    {
+      title: "Total Pengaduan",
+      value: dataTotalPengaduan.jumlahPelayanan,
+      icon: <UsersIcon className="w-8 h-8" />,
+      description: "Tahun Ini",
+    },
+  ];
 
   const updateDashboardPeriod = (newRange) => {
     // Dashboard range changed, write code to refresh your values

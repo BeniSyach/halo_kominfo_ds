@@ -134,7 +134,7 @@ function PengaduanJaringan() {
   const editCurrentLead = (index, data) => {
     dispatch(
       openModal({
-        title: "Edit User",
+        title: "Edit Pengaduan Jaringan",
         bodyType: MODAL_BODY_TYPES.Edit_LEAD_pengaduanJaringan_NEW,
         extraObject: {
           index,
@@ -150,7 +150,7 @@ function PengaduanJaringan() {
         title: "Konfirmasi",
         bodyType: MODAL_BODY_TYPES.CONFIRMATION,
         extraObject: {
-          message: `Apakah Kamu Yakin Menghapus Data Pegawai Ini?`,
+          message: `Apakah Kamu Yakin Menghapus Data Pengaduan Ini?`,
           type: CONFIRMATION_MODAL_CLOSE_TYPES.LEAD_DELETE,
           id,
           index,
@@ -179,9 +179,11 @@ function PengaduanJaringan() {
               <tr>
                 <th>No</th>
                 <th>Nama Pegawai</th>
-                <th>NIP</th>
-                <th>NIK</th>
+                <th>Tanggal Pengaduan</th>
+                <th>Keterangan Pengaduan</th>
                 <th>Status</th>
+                <th>Kegiatan</th>
+                <th>OPD</th>
                 <th>#</th>
               </tr>
             </thead>
@@ -190,10 +192,12 @@ function PengaduanJaringan() {
                 return (
                   <tr key={k}>
                     <td>{k + 1}</td>
-                    <td>{l.namaPegawai}</td>
-                    <td>{l.NIP}</td>
-                    <td>{l.NIK}</td>
-                    <td>{l.status}</td>
+                    <td>{l.idPegawai}</td>
+                    <td>{l.tanggalPengaduan}</td>
+                    <td>{l.keteranganPengaduan}</td>
+                    <td>{l.statusPengaduan}</td>
+                    <td>{l.kegiatanPengaduan}</td>
+                    <td>{l.opd}</td>
                     <td>
                       <button
                         className="btn btn-square btn-ghost"

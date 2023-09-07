@@ -15,6 +15,8 @@ import AddKategoriPelayananModalBody from "../features/kategoriPelayanan/compone
 import EditKategoriPelayananModalBody from "../features/kategoriPelayanan/components/EditKategoriPelayananModalBody";
 import AddPengaduanTTEModalBody from "../features/pengaduanTTE/components/AddPengaduanTTEModalBody";
 import EditPengaduanTTEModalBody from "../features/pengaduanTTE/components/EditPengaduanTTEModalBody";
+import AddPengaduanJaringanModalBody from "../features/pengaduanJaringan/components/AddPengaduanJaringanModalBody";
+import EditPengaduanJaringanModalBody from "../features/pengaduanJaringan/components/EditPengaduanJaringanModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -112,6 +114,18 @@ function ModalLayout() {
               ),
               [MODAL_BODY_TYPES.Edit_LEAD_pengaduanTTE_NEW]: (
                 <EditPengaduanTTEModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.LEAD_pengaduanJaringan_NEW]: (
+                <AddPengaduanJaringanModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.Edit_LEAD_pengaduanJaringan_NEW]: (
+                <EditPengaduanJaringanModalBody
                   closeModal={close}
                   extraObject={extraObject}
                 />
