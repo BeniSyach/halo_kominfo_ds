@@ -1,7 +1,9 @@
 import axios from "axios";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import InputText from "../../../components/Input/InputText";
+import SelectBox from "../../../components/Input/SelectBox";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
 import { editUser } from "../manajemenUserSlice";
@@ -28,6 +30,30 @@ function EditManajemenUserModalBody({ extraObject, closeModal }) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
+
+  const getTotalPengaduan = async () => {
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/TampilJabatan"
+    );
+    return responseUser.data.data;
+  };
+  const [dataTotalPengaduan, setTotalPengaduanData] = useState([]);
+
+  const dataSelectJabatan = dataTotalPengaduan.map((data) => ({
+    name: data.namaJabatan,
+    value: data.idMasterJabatan,
+  }));
+
+  useEffect(() => {
+    getTotalPengaduan()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setTotalPengaduanData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+  }, []);
 
   const saveNewLead = async () => {
     if (leadObj.namaPegawaiBaru.trim() === "")
@@ -120,12 +146,13 @@ function EditManajemenUserModalBody({ extraObject, closeModal }) {
         updateFormValue={updateFormValue}
       />
 
-      <InputText
-        type="text"
-        defaultValue={leadObj.jabatanBaru}
-        updateType="jabatanBaru"
-        containerStyle="mt-4"
+      <SelectBox
+        options={dataSelectJabatan}
         labelTitle="Jabatan"
+        placeholder="Pilih Jabatan"
+        containerStyle="mt-4"
+        updateType="jabatanBaru"
+        defaultValue={leadObj.jabatanBaru}
         updateFormValue={updateFormValue}
       />
 

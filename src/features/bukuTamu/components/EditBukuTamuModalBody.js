@@ -4,24 +4,27 @@ import { useDispatch, useSelector } from "react-redux";
 import InputText from "../../../components/Input/InputText";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
-import { editKategoriPelayanan } from "../kategoriPelayananSlice";
+import { editbukuTamu } from "../bukuTamuSlice";
 
 function EditBukuTamuModalBody({ extraObject, closeModal }) {
   const { index } = extraObject;
-  const who_akses = localStorage.getItem("who_akses");
 
-  const kategoriPelayanan = useSelector((state) => state.kategoriPelayanan);
+  const bukuTamu = useSelector((state) => state.bukuTamu);
 
-  const [dataKategori, setData] = useState(
-    kategoriPelayanan.kategoriPelayanan.find((data) => data.id === index)
+  const [dataBuku, setData] = useState(
+    bukuTamu.bukuTamu.find((data) => data.idBukuTamu === index)
   );
 
   const dispatch = useDispatch();
 
   const INITIAL_LEAD_OBJ = {
-    idJenisPelayanan: dataKategori.idJenisPelayanan,
-    kategoriPelayanan: dataKategori.kategoriPelayanan,
-    idPegawaiAkses: who_akses,
+    tanggal: dataBuku.tanggal,
+    instansi: dataBuku.instansi,
+    nama: dataBuku.nama,
+    jabatan: dataBuku.jabatan,
+    nomorTelepon: dataBuku.nomorTelepon,
+    tujuan: dataBuku.tujuan,
+    keterangan: dataBuku.keterangan,
   };
 
   const [loading, setLoading] = useState(false);
@@ -29,22 +32,38 @@ function EditBukuTamuModalBody({ extraObject, closeModal }) {
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
 
   const saveNewLead = async () => {
-    if (leadObj.idJenisPelayanan.trim() === "")
-      return setErrorMessage("nama Pegawai Tidak Boleh Kosong !");
-    else if (leadObj.kategoriPelayanan.trim() === "")
-      return setErrorMessage("NIP Tidak Boleh Kosong !");
-    else if (leadObj.idPegawaiAkses.trim() === "")
-      return setErrorMessage("Akses Pegawai Tidak Boleh Kosong !");
+    if (leadObj.tanggal.trim() === "")
+      return setErrorMessage("Tanggal Tidak Boleh Kosong !");
+    else if (leadObj.instansi.trim() === "")
+      return setErrorMessage("Instansi Tidak Boleh Kosong !");
+    else if (leadObj.nama.trim() === "")
+      return setErrorMessage("Nama Tidak Boleh Kosong !");
+    else if (leadObj.jabatan.trim() === "")
+      return setErrorMessage("Jabatan Tidak Boleh Kosong !");
+    else if (leadObj.nomorTelepon.trim() === "")
+      return setErrorMessage("No Hp Pegawai Tidak Boleh Kosong !");
+    else if (leadObj.tujuan.trim() === "")
+      return setErrorMessage("Tujuan Tidak Boleh Kosong !");
+    else if (leadObj.keterangan.trim() === "")
+      return setErrorMessage("Keterangan Tidak Boleh Kosong !");
     else {
       let data = {
-        idJenisPelayanan: leadObj.idJenisPelayanan,
-        kategoriPelayanan: leadObj.kategoriPelayanan,
-        idPegawaiAkses: leadObj.idPegawaiAkses,
+        tanggal: leadObj.tanggal,
+        instansi: leadObj.instansi,
+        nama: leadObj.nama,
+        jabatan: leadObj.jabatan,
+        nomorTelepon: leadObj.nomorTelepon,
+        tujuan: leadObj.tujuan,
+        keterangan: leadObj.keterangan,
       };
       let datafordatabase = {
-        idJenisPelayanan: leadObj.idJenisPelayanan,
-        kategoriPelayanan: leadObj.kategoriPelayanan,
-        idPegawaiAkses: leadObj.idPegawaiAkses,
+        tanggal: leadObj.tanggal,
+        instansi: leadObj.instansi,
+        nama: leadObj.nama,
+        jabatan: leadObj.jabatan,
+        nomorTelepon: leadObj.nomorTelepon,
+        tujuan: leadObj.tujuan,
+        keterangan: leadObj.keterangan,
       };
       try {
         const token = localStorage.getItem("token");
@@ -54,15 +73,15 @@ function EditBukuTamuModalBody({ extraObject, closeModal }) {
           },
         };
         const response = await axios.put(
-          `/APIHaloKominfoInternal/api/EditKategoriPelayanan/${dataKategori.id}`,
+          `/APIHaloKominfoInternal/api/EditBukuTamu/${dataBuku.idBukuTamu}`,
           datafordatabase,
           config
         );
         if (response) {
-          dispatch(editKategoriPelayanan({ index, data }));
+          dispatch(editbukuTamu({ index, data }));
           dispatch(
             showNotification({
-              message: "Kategori Pelayanan Telah Diedit!",
+              message: "data Telah Diedit!",
               status: 1,
             })
           );
@@ -89,20 +108,65 @@ function EditBukuTamuModalBody({ extraObject, closeModal }) {
   return (
     <>
       <InputText
-        type="number"
-        defaultValue={leadObj.idJenisPelayanan}
-        updateType="idJenisPelayanan"
+        type="date"
+        defaultValue={leadObj.tanggal}
+        updateType="tanggal"
         containerStyle="mt-4"
-        labelTitle="Jenis Pelayanan"
+        labelTitle="tanggal"
         updateFormValue={updateFormValue}
       />
 
       <InputText
         type="text"
-        defaultValue={leadObj.kategoriPelayanan}
-        updateType="kategoriPelayanan"
+        defaultValue={leadObj.instansi}
+        updateType="instansi"
         containerStyle="mt-4"
-        labelTitle="Kategori Pelayanan"
+        labelTitle="Instansi"
+        updateFormValue={updateFormValue}
+      />
+
+      <InputText
+        type="text"
+        defaultValue={leadObj.nama}
+        updateType="nama"
+        containerStyle="mt-4"
+        labelTitle="Nama"
+        updateFormValue={updateFormValue}
+      />
+
+      <InputText
+        type="text"
+        defaultValue={leadObj.jabatan}
+        updateType="jabatan"
+        containerStyle="mt-4"
+        labelTitle="Jabatan"
+        updateFormValue={updateFormValue}
+      />
+
+      <InputText
+        type="number"
+        defaultValue={leadObj.nomorTelepon}
+        updateType="nomorTelepon"
+        containerStyle="mt-4"
+        labelTitle="No Hp"
+        updateFormValue={updateFormValue}
+      />
+
+      <InputText
+        type="text"
+        defaultValue={leadObj.tujuan}
+        updateType="tujuan"
+        containerStyle="mt-4"
+        labelTitle="Tujuan"
+        updateFormValue={updateFormValue}
+      />
+
+      <InputText
+        type="text"
+        defaultValue={leadObj.keterangan}
+        updateType="keterangan"
+        containerStyle="mt-4"
+        labelTitle="Keterangan"
         updateFormValue={updateFormValue}
       />
 

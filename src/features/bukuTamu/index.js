@@ -43,7 +43,7 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
   const openAddNewLeadModal = () => {
     dispatch(
       openModal({
-        title: "Tambah Kategori Pelayanan",
+        title: "Tambah Buku Tamu",
         bodyType: MODAL_BODY_TYPES.LEAD_bukuTamu_NEW,
       })
     );
@@ -56,7 +56,7 @@ const TopSideButtons = ({ removeFilter, applyFilter, applySearch }) => {
           className="btn px-6 btn-sm normal-case btn-primary"
           onClick={() => openAddNewLeadModal()}
         >
-          Tambah Kategori Pelayanan
+          Tambah Tamu
         </button>
       </div>
       <div className="inline-block float-right  mr-5 ">
@@ -200,13 +200,15 @@ function BukuTamu() {
                     <td>
                       <button
                         className="btn btn-square btn-ghost"
-                        onClick={() => editCurrentLead(l.id)}
+                        onClick={() => editCurrentLead(l.idBukuTamu)}
                       >
                         <PencilIcon className="w-5" />
                       </button>
                       <button
                         className="btn btn-square btn-ghost"
-                        onClick={() => deleteCurrentLead(l.id, k, "BukuTamu")}
+                        onClick={() =>
+                          deleteCurrentLead(l.idBukuTamu, k, "BukuTamu")
+                        }
                       >
                         <TrashIcon className="w-5" />
                       </button>

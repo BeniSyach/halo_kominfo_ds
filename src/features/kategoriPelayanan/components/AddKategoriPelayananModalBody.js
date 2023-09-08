@@ -1,7 +1,8 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import InputText from "../../../components/Input/InputText";
+import SelectBox from "../../../components/Input/SelectBox";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
 import { tambahKategoriPelayanan } from "../kategoriPelayananSlice";
@@ -19,6 +20,30 @@ function AddKategoriPelayananModalBody({ closeModal }) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
+
+  const getTotalPengaduan = async () => {
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/TampilJenisPelayanan"
+    );
+    return responseUser.data.data;
+  };
+  const [dataTotalPengaduan, setTotalPengaduanData] = useState([]);
+
+  const dataSelectJenisPelayanan = dataTotalPengaduan.map((data) => ({
+    name: data.jenisPelayanan,
+    value: data.id,
+  }));
+
+  useEffect(() => {
+    getTotalPengaduan()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setTotalPengaduanData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+  }, []);
 
   const saveNewLead = async () => {
     if (leadObj.idJenisPelayanan.trim() === "")
@@ -80,12 +105,13 @@ function AddKategoriPelayananModalBody({ closeModal }) {
 
   return (
     <>
-      <InputText
-        type="number"
+      <SelectBox
+        options={dataSelectJenisPelayanan}
+        labelTitle="Jenis Pelayanan"
+        placeholder="Pilih Jenis Pelayanan"
+        containerStyle="mt-4"
         defaultValue={leadObj.idJenisPelayanan}
         updateType="idJenisPelayanan"
-        containerStyle="mt-4"
-        labelTitle="Jenis Pelayanan"
         updateFormValue={updateFormValue}
       />
 

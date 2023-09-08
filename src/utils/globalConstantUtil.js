@@ -16,6 +16,8 @@ module.exports = Object.freeze({
     Edit_LEAD_pengaduanTTE_NEW: "Edit_LEAD_pengaduanTTE_NEW",
     LEAD_pengaduanJaringan_NEW: "LEAD_pengaduanJaringan_NEW",
     Edit_LEAD_pengaduanJaringan_NEW: "Edit_LEAD_pengaduanJaringan_NEW",
+    LEAD_bukuTamu_NEW: "LEAD_bukuTamu_NEW",
+    Edit_LEAD_bukuTamu_NEW: "Edit_LEAD_bukuTamu_NEW",
     CONFIRMATION: "CONFIRMATION",
     DEFAULT: "",
   },

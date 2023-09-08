@@ -17,6 +17,8 @@ import AddPengaduanTTEModalBody from "../features/pengaduanTTE/components/AddPen
 import EditPengaduanTTEModalBody from "../features/pengaduanTTE/components/EditPengaduanTTEModalBody";
 import AddPengaduanJaringanModalBody from "../features/pengaduanJaringan/components/AddPengaduanJaringanModalBody";
 import EditPengaduanJaringanModalBody from "../features/pengaduanJaringan/components/EditPengaduanJaringanModalBody";
+import AddBukuTamuModalBody from "../features/bukuTamu/components/AddBukuTamuModalBody";
+import EditBukuTamuModalBody from "../features/bukuTamu/components/EditBukuTamuModalBody";
 
 function ModalLayout() {
   const { isOpen, bodyType, size, extraObject, title } = useSelector(
@@ -126,6 +128,18 @@ function ModalLayout() {
               ),
               [MODAL_BODY_TYPES.Edit_LEAD_pengaduanJaringan_NEW]: (
                 <EditPengaduanJaringanModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.LEAD_bukuTamu_NEW]: (
+                <AddBukuTamuModalBody
+                  closeModal={close}
+                  extraObject={extraObject}
+                />
+              ),
+              [MODAL_BODY_TYPES.Edit_LEAD_bukuTamu_NEW]: (
+                <EditBukuTamuModalBody
                   closeModal={close}
                   extraObject={extraObject}
                 />

@@ -187,7 +187,7 @@ function KategoriPelayanan() {
                 return (
                   <tr key={k}>
                     <td>{k + 1}</td>
-                    <td>{l.idJenisPelayanan}</td>
+                    <td>{l.jenisPelayanan}</td>
                     <td>{l.kategoriPelayanan}</td>
                     <td>
                       <button

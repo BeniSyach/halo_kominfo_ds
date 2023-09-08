@@ -11,6 +11,7 @@ import { hapusOPD } from "../../manajemenOPD/manajemenOPDSlice";
 import { hapusKategoriPelayanan } from "../../kategoriPelayanan/kategoriPelayananSlice";
 import { hapusPengaduanTTE } from "../../pengaduanTTE/pengaduanTTESlice";
 import { hapusPengaduanJaringan } from "../../pengaduanJaringan/pengaduanJaringanSlice";
+import { hapusbukuTamu } from "../../bukuTamu/bukuTamuSlice";
 
 function ConfirmationModalBody({ extraObject, closeModal }) {
   const dispatch = useDispatch();
@@ -159,6 +160,35 @@ function ConfirmationModalBody({ extraObject, closeModal }) {
           );
           if (response) {
             dispatch(hapusPengaduanJaringan({ index }));
+            dispatch(showNotification({ message: "Data Dihapus!", status: 1 }));
+          }
+        } catch (err) {
+          if (!err?.response) {
+            dispatch(
+              showNotification({ message: "Error Server !", status: 0 })
+            );
+          } else {
+            dispatch(
+              showNotification({
+                message: "Error ! / Token Expired",
+                status: 0,
+              })
+            );
+          }
+        }
+      } else if (aksi === "BukuTamu") {
+        try {
+          const config = {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          };
+          const response = await axios.delete(
+            `/APIHaloKominfoInternal/api/HapusBukuTamu/${id}/${who_akses}`,
+            config
+          );
+          if (response) {
+            dispatch(hapusbukuTamu({ index }));
             dispatch(showNotification({ message: "Data Dihapus!", status: 1 }));
           }
         } catch (err) {

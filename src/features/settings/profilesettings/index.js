@@ -1,51 +1,135 @@
-import moment from "moment"
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import TitleCard from "../../../components/Cards/TitleCard"
-import { showNotification } from '../../common/headerSlice'
-import InputText from '../../../components/Input/InputText'
-import TextAreaInput from '../../../components/Input/TextAreaInput'
-import ToogleInput from '../../../components/Input/ToogleInput'
+import moment from "moment";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import TitleCard from "../../../components/Cards/TitleCard";
+import { showNotification } from "../../common/headerSlice";
+import InputText from "../../../components/Input/InputText";
+import TextAreaInput from "../../../components/Input/TextAreaInput";
+import ToogleInput from "../../../components/Input/ToogleInput";
+import axios from "axios";
 
-function ProfileSettings(){
+function ProfileSettings() {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
+  const who_akses = localStorage.getItem("who_akses");
 
-    const dispatch = useDispatch()
+  const getTotalPengaduan = async () => {
+    const responseUser = await axios.get(
+      `/APIHaloKominfoInternal/api/TampilDetailPegawai/${who_akses}`
+    );
+    return responseUser.data.data;
+  };
 
-    // Call API to update profile settings changes
-    const updateProfile = () => {
-        dispatch(showNotification({message : "Profile Updated", status : 1}))    
+  useEffect(() => {
+    getTotalPengaduan()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setTotalPengaduanData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+  }, []);
+
+  const [dataTotalPengaduan, setTotalPengaduanData] = useState([]);
+
+  const INITIAL_LEAD_OBJ = {
+    namaPegawaiBaru: dataTotalPengaduan.namaPegawai,
+    nipBaru: dataTotalPengaduan.NIP,
+    nikBaru: dataTotalPengaduan.NIK,
+    jabatanBaru: dataTotalPengaduan.jabatan,
+    idPegawaiAkses: who_akses,
+  };
+  const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
+
+  // Call API to update profile settings changes
+  const updateProfile = async () => {
+    let datafordatabase = {
+      nik: leadObj.nikBaru,
+      namaPegawai: leadObj.namaPegawaiBaru,
+      nip: leadObj.nipBaru,
+      jabatan: leadObj.jabatanBaru,
+      idPegawaiAkses: leadObj.idPegawaiAkses,
+    };
+    try {
+      const token = localStorage.getItem("token");
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.put(
+        `/APIHaloKominfoInternal/api/EditDataPegawai/${who_akses}`,
+        datafordatabase,
+        config
+      );
+      if (response) {
+        dispatch(showNotification({ message: "Profil Diperbarui", status: 1 }));
+      }
+    } catch (err) {
+      setLoading(false);
+      if (!err?.response) {
+        dispatch(showNotification({ message: "Error Server !", status: 0 }));
+      } else {
+        dispatch(
+          showNotification({ message: "Data gagal Di Edit", status: 0 })
+        );
+      }
     }
+  };
 
-    const updateFormValue = ({updateType, value}) => {
-        console.log(updateType)
-    }
+  const updateFormValue = ({ updateType, value }) => {
+    setLeadObj({ ...leadObj, [updateType]: value });
+  };
 
-    return(
-        <>
-            
-            <TitleCard title="Profile Settings" topMargin="mt-2">
+  return (
+    <>
+      <TitleCard title="Profile Settings" topMargin="mt-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <InputText
+            labelTitle="Nama"
+            defaultValue={leadObj.namaPegawaiBaru}
+            updateType="namaPegawaiBaru"
+            updateFormValue={updateFormValue}
+          />
+          <InputText
+            labelTitle="NIP"
+            defaultValue={leadObj.nipBaru}
+            updateType="nipBaru"
+            updateFormValue={updateFormValue}
+          />
+          <InputText
+            labelTitle="NIK"
+            defaultValue={leadObj.nikBaru}
+            updateType="nikBaru"
+            updateFormValue={updateFormValue}
+          />
+          <InputText
+            labelTitle="Jabatan"
+            defaultValue={leadObj.jabatanBaru}
+            updateType="jabatanBaru"
+            updateFormValue={updateFormValue}
+          />
+          {/* <InputText
+            labelTitle="Status"
+            defaultValue={dataTotalPengaduan.status}
+            updateFormValue={updateFormValue}
+          /> */}
+        </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <InputText labelTitle="Name" defaultValue="Alex" updateFormValue={updateFormValue}/>
-                    <InputText labelTitle="Email Id" defaultValue="alex@dashwind.com" updateFormValue={updateFormValue}/>
-                    <InputText labelTitle="Title" defaultValue="UI/UX Designer" updateFormValue={updateFormValue}/>
-                    <InputText labelTitle="Place" defaultValue="California" updateFormValue={updateFormValue}/>
-                    <TextAreaInput labelTitle="About" defaultValue="Doing what I love, part time traveller" updateFormValue={updateFormValue}/>
-                </div>
-                <div className="divider" ></div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <InputText labelTitle="Language" defaultValue="English" updateFormValue={updateFormValue}/>
-                    <InputText labelTitle="Timezone" defaultValue="IST" updateFormValue={updateFormValue}/>
-                    <ToogleInput updateType="syncData" labelTitle="Sync Data" defaultValue={true} updateFormValue={updateFormValue}/>
-                </div>
-
-                <div className="mt-16"><button className="btn btn-primary float-right" onClick={() => updateProfile()}>Update</button></div>
-            </TitleCard>
-        </>
-    )
+        <div className="mt-16">
+          <button
+            className="btn btn-primary float-right"
+            onClick={() => updateProfile()}
+          >
+            Update
+          </button>
+        </div>
+      </TitleCard>
+    </>
+  );
 }
 
-
-export default ProfileSettings
+export default ProfileSettings;

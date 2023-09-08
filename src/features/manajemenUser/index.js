@@ -192,7 +192,7 @@ function ManajemenUser() {
                     <td>{l.namaPegawai}</td>
                     <td>{l.NIP}</td>
                     <td>{l.NIK}</td>
-                    <td>{l.jabatan}</td>
+                    <td>{l.namaJabatan}</td>
                     <td>
                       <button
                         className="btn btn-square btn-ghost"

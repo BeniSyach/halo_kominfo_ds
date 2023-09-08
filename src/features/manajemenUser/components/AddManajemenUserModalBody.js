@@ -1,7 +1,9 @@
 import axios from "axios";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import InputText from "../../../components/Input/InputText";
+import SelectBox from "../../../components/Input/SelectBox";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
 import { tambahUser } from "../manajemenUserSlice";
@@ -18,6 +20,30 @@ function AddManajemenUserModalBody({ closeModal }) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
+
+  const getTotalPengaduan = async () => {
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/TampilJabatan"
+    );
+    return responseUser.data.data;
+  };
+  const [dataTotalPengaduan, setTotalPengaduanData] = useState([]);
+
+  const dataSelectJabatan = dataTotalPengaduan.map((data) => ({
+    name: data.namaJabatan,
+    value: data.idMasterJabatan,
+  }));
+
+  useEffect(() => {
+    getTotalPengaduan()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setTotalPengaduanData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+  }, []);
 
   const who_akses = localStorage.getItem("who_akses");
 
@@ -84,12 +110,6 @@ function AddManajemenUserModalBody({ closeModal }) {
 
   return (
     <>
-      <div className="inline-block float-left">
-        <button className="btn px-6 mb-2 btn-sm normal-case btn-warning">
-          Import Data
-        </button>
-      </div>
-
       <InputText
         type="text"
         defaultValue={leadObj.namaPegawaiBaru}
@@ -117,12 +137,13 @@ function AddManajemenUserModalBody({ closeModal }) {
         updateFormValue={updateFormValue}
       />
 
-      <InputText
-        type="jabatanBaru"
-        defaultValue={leadObj.jabatanBaru}
-        updateType="jabatanBaru"
-        containerStyle="mt-4"
+      <SelectBox
+        options={dataSelectJabatan}
         labelTitle="Jabatan"
+        placeholder="Pilih Jabatan"
+        containerStyle="mt-4"
+        updateType="jabatanBaru"
+        defaultValue={leadObj.jabatanBaru}
         updateFormValue={updateFormValue}
       />
 
