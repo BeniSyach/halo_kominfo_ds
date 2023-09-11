@@ -29,7 +29,7 @@ function LeftSidebar() {
             <img
               className="mask mask-squircle w-10"
               src="/logo.png"
-              alt="DashWind Logo"
+              alt="Logo Halo Kominfo DS"
             />
             Halo Kominfo
           </Link>{" "}

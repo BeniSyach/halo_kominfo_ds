@@ -1,11 +1,17 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  NotificationContainer,
+  NotificationManager,
+} from "react-notifications";
+import "react-notifications/lib/notifications.css";
 import { useDispatch } from "react-redux";
-import InputText from "../../../components/Input/InputText";
-import SelectBox from "../../../components/Input/SelectBox";
-import ErrorText from "../../../components/Typography/ErrorText";
-import { showNotification } from "../../common/headerSlice";
-import { tambahbukuTamu } from "../bukuTamuSlice";
+import { Link } from "react-router-dom";
+import InputText from "../../components/Input/InputText";
+import SelectBox from "../../components/Input/SelectBox";
+import ErrorText from "../../components/Typography/ErrorText";
+import { tambahbukuTamu } from "../bukuTamu/bukuTamuSlice";
+import { showNotification } from "../common/headerSlice";
 
 const INITIAL_LEAD_OBJ = {
   tanggal: "",
@@ -17,11 +23,12 @@ const INITIAL_LEAD_OBJ = {
   keterangan: "",
 };
 
-function AddBukuTamuModalBody({ closeModal }) {
+const FormBukuTamu = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
+  console.log(leadObj);
 
   const getOpd = async () => {
     const token = localStorage.getItem("token");
@@ -99,15 +106,6 @@ function AddBukuTamuModalBody({ closeModal }) {
     else if (leadObj.keterangan.trim() === "")
       return setErrorMessage("Keterangan Tidak Boleh Kosong !");
     else {
-      let newLeadObj = {
-        tanggal: leadObj.tanggal,
-        instansi: leadObj.instansi,
-        nama: leadObj.nama,
-        jabatan: leadObj.jabatan,
-        nomorTelepon: leadObj.nomorTelepon,
-        tujuan: leadObj.tujuan,
-        keterangan: leadObj.keterangan,
-      };
       let datafordatabase = {
         tanggal: leadObj.tanggal,
         instansi: leadObj.instansi,
@@ -130,14 +128,7 @@ function AddBukuTamuModalBody({ closeModal }) {
           config
         );
         if (response) {
-          dispatch(tambahbukuTamu({ newLeadObj }));
-          dispatch(
-            showNotification({
-              message: "Buku Tamu Telah Ditambahkan!",
-              status: 1,
-            })
-          );
-          closeModal();
+          NotificationManager.success("Data berhasil disimpan", "Success");
         }
       } catch (err) {
         setLoading(false);
@@ -158,83 +149,94 @@ function AddBukuTamuModalBody({ closeModal }) {
   };
 
   return (
-    <>
-      <InputText
-        type="date"
-        defaultValue={leadObj.tanggal}
-        updateType="tanggal"
-        containerStyle="mt-4"
-        labelTitle="tanggal"
-        updateFormValue={updateFormValue}
-      />
+    <div className="min-h-screen bg-violet-700 flex items-center">
+      <NotificationContainer />
+      <div className="card mx-auto w-full max-w-sm  shadow-xl bg-slate-600">
+        <div className="py-11 px-5">
+          <h2 className="text-2xl font-semibold mb-2 text-center">
+            Tambah Buku Tamu
+          </h2>
+          <InputText
+            type="date"
+            defaultValue={leadObj.tanggal}
+            updateType="tanggal"
+            containerStyle="mt-4"
+            labelTitle="tanggal"
+            updateFormValue={updateFormValue}
+          />
 
-      <SelectBox
-        options={dataSelectOpd}
-        labelTitle="Instansi"
-        placeholder="Pilih Instansi"
-        containerStyle="mt-4"
-        updateType="instansi"
-        defaultValue={leadObj.instansi}
-        updateFormValue={updateFormValue}
-      />
+          <SelectBox
+            options={dataSelectOpd}
+            labelTitle="Instansi"
+            placeholder="Pilih Instansi"
+            containerStyle="mt-4"
+            updateType="instansi"
+            defaultValue={leadObj.instansi}
+            updateFormValue={updateFormValue}
+          />
 
-      <InputText
-        type="text"
-        defaultValue={leadObj.nama}
-        updateType="nama"
-        containerStyle="mt-4"
-        labelTitle="Nama"
-        updateFormValue={updateFormValue}
-      />
+          <InputText
+            type="text"
+            defaultValue={leadObj.nama}
+            updateType="nama"
+            containerStyle="mt-4"
+            labelTitle="Nama"
+            updateFormValue={updateFormValue}
+          />
 
-      <SelectBox
-        options={dataSelectJabatan}
-        labelTitle="Jabatan"
-        placeholder="Pilih Jabatan"
-        containerStyle="mt-4"
-        updateType="jabatan"
-        defaultValue={leadObj.jabatan}
-        updateFormValue={updateFormValue}
-      />
+          <SelectBox
+            options={dataSelectJabatan}
+            labelTitle="Jabatan"
+            placeholder="Pilih Jabatan"
+            containerStyle="mt-4"
+            updateType="jabatan"
+            defaultValue={leadObj.jabatan}
+            updateFormValue={updateFormValue}
+          />
 
-      <InputText
-        type="number"
-        defaultValue={leadObj.nomorTelepon}
-        updateType="nomorTelepon"
-        containerStyle="mt-4"
-        labelTitle="No Hp"
-        updateFormValue={updateFormValue}
-      />
+          <InputText
+            type="number"
+            defaultValue={leadObj.nomorTelepon}
+            updateType="nomorTelepon"
+            containerStyle="mt-4"
+            labelTitle="No Hp"
+            updateFormValue={updateFormValue}
+          />
 
-      <InputText
-        type="text"
-        defaultValue={leadObj.tujuan}
-        updateType="tujuan"
-        containerStyle="mt-4"
-        labelTitle="Tujuan"
-        updateFormValue={updateFormValue}
-      />
+          <InputText
+            type="text"
+            defaultValue={leadObj.tujuan}
+            updateType="tujuan"
+            containerStyle="mt-4"
+            labelTitle="Tujuan"
+            updateFormValue={updateFormValue}
+          />
 
-      <InputText
-        type="text"
-        defaultValue={leadObj.keterangan}
-        updateType="keterangan"
-        containerStyle="mt-4"
-        labelTitle="Keterangan"
-        updateFormValue={updateFormValue}
-      />
+          <InputText
+            type="text"
+            defaultValue={leadObj.keterangan}
+            updateType="keterangan"
+            containerStyle="mt-4"
+            labelTitle="Keterangan"
+            updateFormValue={updateFormValue}
+          />
 
-      <ErrorText styleClass="mt-16">{errorMessage}</ErrorText>
-      <div className="modal-action">
-        <button className="btn btn-ghost" onClick={() => closeModal()}>
-          Cancel
-        </button>
-        <button className="btn btn-primary px-6" onClick={() => saveNewLead()}>
-          Save
-        </button>
+          <ErrorText styleClass="mt-16">{errorMessage}</ErrorText>
+          <div className="modal-action">
+            <Link to={"/login"}>
+              <button className="btn btn-ghost">Kembali</button>
+            </Link>
+            <button
+              className="btn btn-primary px-6"
+              onClick={() => saveNewLead()}
+            >
+              Save
+            </button>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
-}
+};
 
-export default AddBukuTamuModalBody;
+export default FormBukuTamu;

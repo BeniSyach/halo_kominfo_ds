@@ -1,7 +1,8 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import InputText from "../../../components/Input/InputText";
+import SelectBox from "../../../components/Input/SelectBox";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
 import { editbukuTamu } from "../bukuTamuSlice";
@@ -30,6 +31,66 @@ function EditBukuTamuModalBody({ extraObject, closeModal }) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
+
+  const getOpd = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/TampilOpd",
+      config
+    );
+    return responseUser.data.data;
+  };
+
+  const [dataOpd, setDataOpd] = useState([]);
+
+  const dataSelectOpd = dataOpd.map((data) => ({
+    name: data.namaOpd,
+    value: data.id,
+  }));
+
+  const getTotalPengaduan = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/TampilJabatan",
+      config
+    );
+    return responseUser.data.data;
+  };
+  const [dataTotalPengaduan, setTotalPengaduanData] = useState([]);
+
+  const dataSelectJabatan = dataTotalPengaduan.map((data) => ({
+    name: data.namaJabatan,
+    value: data.idMasterJabatan,
+  }));
+
+  useEffect(() => {
+    getOpd()
+      .then((dataOpd) => {
+        // Update state userData dengan data yang diterima dari axios
+        setDataOpd(dataOpd);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+    getTotalPengaduan()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setTotalPengaduanData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+  }, []);
 
   const saveNewLead = async () => {
     if (leadObj.tanggal.trim() === "")
@@ -116,12 +177,13 @@ function EditBukuTamuModalBody({ extraObject, closeModal }) {
         updateFormValue={updateFormValue}
       />
 
-      <InputText
-        type="text"
-        defaultValue={leadObj.instansi}
-        updateType="instansi"
-        containerStyle="mt-4"
+      <SelectBox
+        options={dataSelectOpd}
         labelTitle="Instansi"
+        placeholder="Pilih Instansi"
+        containerStyle="mt-4"
+        updateType="instansi"
+        defaultValue={leadObj.instansi}
         updateFormValue={updateFormValue}
       />
 
@@ -134,12 +196,13 @@ function EditBukuTamuModalBody({ extraObject, closeModal }) {
         updateFormValue={updateFormValue}
       />
 
-      <InputText
-        type="text"
-        defaultValue={leadObj.jabatan}
-        updateType="jabatan"
-        containerStyle="mt-4"
+      <SelectBox
+        options={dataSelectJabatan}
         labelTitle="Jabatan"
+        placeholder="Pilih Jabatan"
+        containerStyle="mt-4"
+        updateType="jabatan"
+        defaultValue={leadObj.jabatan}
         updateFormValue={updateFormValue}
       />
 

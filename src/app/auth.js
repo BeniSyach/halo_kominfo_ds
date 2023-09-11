@@ -9,6 +9,7 @@ const checkAuth = () => {
     "forgot-password",
     "register",
     "documentation",
+    "app/bukuTamu",
   ];
 
   const isPublicPage = PUBLIC_ROUTES.some((r) =>

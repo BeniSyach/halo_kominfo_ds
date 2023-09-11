@@ -4,8 +4,20 @@ import LandingIntro from "./LandingIntro";
 import ErrorText from "../../components/Typography/ErrorText";
 import InputText from "../../components/Input/InputText";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { openModal } from "../common/modalSlice";
+import { MODAL_BODY_TYPES } from "../../utils/globalConstantUtil";
 
 function Login() {
+  const dispatch = useDispatch();
+  const openAddNewLeadModal = () => {
+    dispatch(
+      openModal({
+        title: "Tambah Buku Tamu",
+        bodyType: MODAL_BODY_TYPES.LEAD_bukuTamu_NEW,
+      })
+    );
+  };
   const INITIAL_LOGIN_OBJ = {
     password: "",
     emailId: "",
@@ -96,7 +108,7 @@ function Login() {
 
             <div className="text-center mt-4">
               {/* Don't have an account yet?{" "} */}
-              <Link to="/bukuTamu">
+              <Link to="/app/bukuTamu">
                 <span className="  inline-block  hover:text-white hover:underline hover:cursor-pointer transition duration-200">
                   Buku Tamu
                 </span>
