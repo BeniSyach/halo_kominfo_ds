@@ -4,43 +4,32 @@ import { useDispatch, useSelector } from "react-redux";
 import TitleCard from "../../../components/Cards/TitleCard";
 import { showNotification } from "../../common/headerSlice";
 import InputText from "../../../components/Input/InputText";
-import TextAreaInput from "../../../components/Input/TextAreaInput";
-import ToogleInput from "../../../components/Input/ToogleInput";
 import axios from "axios";
+import { getmanajemenUserContent } from "../../manajemenUser/manajemenUserSlice";
 
 function ProfileSettings() {
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-
   const who_akses = localStorage.getItem("who_akses");
 
-  const getTotalPengaduan = async () => {
-    const responseUser = await axios.get(
-      `/APIHaloKominfoInternal/api/TampilDetailPegawai/${who_akses}`
-    );
-    return responseUser.data.data;
-  };
+  const manajemenUser = useSelector((state) => state.datamanajemenUser);
+  const [dataUser, setDataUser] = useState(
+    manajemenUser.manajemenUser.find((data) => data.id === who_akses)
+  );
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    getTotalPengaduan()
-      .then((data) => {
-        // Update state userData dengan data yang diterima dari axios
-        setTotalPengaduanData(data);
-      })
-      .catch((error) => {
-        console.error("Gagal mengambil data:", error);
-      });
-  }, []);
-
-  const [dataTotalPengaduan, setTotalPengaduanData] = useState([]);
+    dispatch(getmanajemenUserContent());
+  }, [dispatch]);
 
   const INITIAL_LEAD_OBJ = {
-    namaPegawaiBaru: dataTotalPengaduan.namaPegawai,
-    nipBaru: dataTotalPengaduan.NIP,
-    nikBaru: dataTotalPengaduan.NIK,
-    jabatanBaru: dataTotalPengaduan.jabatan,
+    namaPegawaiBaru: dataUser.namaPegawai,
+    nipBaru: dataUser.NIP,
+    nikBaru: dataUser.NIK,
+    jabatanBaru: dataUser.namaJabatan,
     idPegawaiAkses: who_akses,
   };
+
+  const [loading, setLoading] = useState(false);
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
 
   // Call API to update profile settings changes

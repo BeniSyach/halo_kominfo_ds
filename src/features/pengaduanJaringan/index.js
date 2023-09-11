@@ -192,12 +192,12 @@ function PengaduanJaringan() {
                 return (
                   <tr key={k}>
                     <td>{k + 1}</td>
-                    <td>{l.idPegawai}</td>
+                    <td>{l.namaPegawai}</td>
                     <td>{l.tanggalPengaduan}</td>
                     <td>{l.keteranganPengaduan}</td>
                     <td>{l.statusPengaduan}</td>
                     <td>{l.kegiatanPengaduan}</td>
-                    <td>{l.opd}</td>
+                    <td>{l.namaOpd}</td>
                     <td>
                       <button
                         className="btn btn-square btn-ghost"

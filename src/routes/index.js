@@ -42,10 +42,10 @@ const routes = [
     path: "/pengaduanJaringan",
     component: PengaduanJaringan,
   },
-  {
-    path: "/settings-profile",
-    component: ProfileSettings,
-  },
+  // {
+  //   path: "/settings-profile",
+  //   component: ProfileSettings,
+  // },
 
   {
     path: "/jabatan",

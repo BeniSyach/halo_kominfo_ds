@@ -1,7 +1,8 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import InputText from "../../../components/Input/InputText";
+import SelectBox from "../../../components/Input/SelectBox";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
 import { tambahPengaduanTTE } from "../pengaduanTTESlice";
@@ -28,6 +29,135 @@ function AddPengaduanTTEModalBody({ closeModal }) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
+
+  const getTotalPengaduan = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/TampilPegawai",
+      config
+    );
+    return responseUser.data.data;
+  };
+  const [dataTotalPengaduan, setTotalPengaduanData] = useState([]);
+
+  const dataSelectPegawai = dataTotalPengaduan.map((data) => ({
+    name: data.namaPegawai,
+    value: data.id,
+  }));
+
+  const getOpd = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/TampilOpd",
+      config
+    );
+    return responseUser.data.data;
+  };
+
+  const dataSelectStatus = [
+    {
+      name: "Belum Selesai",
+      value: 0,
+    },
+    {
+      name: "Selesai",
+      value: 1,
+    },
+  ];
+
+  const [dataOpd, setDataOpd] = useState([]);
+
+  const dataSelectOpd = dataOpd.map((data) => ({
+    name: data.namaOpd,
+    value: data.id,
+  }));
+
+  const getJenisPelayanan = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/TampilJenisPelayanan",
+      config
+    );
+    return responseUser.data.data;
+  };
+
+  const [dataJenisPelayanan, setDataJenisPelayanan] = useState([]);
+
+  const dataSelectJenisPelayanan = dataJenisPelayanan.map((data) => ({
+    name: data.jenisPelayanan,
+    value: data.id,
+  }));
+
+  const getKategoriPelayanan = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/TampilKategoriPelayanan",
+      config
+    );
+    return responseUser.data.data;
+  };
+
+  const [dataKategoriPelayanan, setDataKategoriPelayanan] = useState([]);
+
+  const dataSelectKategoriPelayanan = dataKategoriPelayanan.map((data) => ({
+    name: data.kategoriPelayanan,
+    value: data.id,
+  }));
+
+  useEffect(() => {
+    getTotalPengaduan()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setTotalPengaduanData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+    getOpd()
+      .then((dataOpd) => {
+        // Update state userData dengan data yang diterima dari axios
+        setDataOpd(dataOpd);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+    getJenisPelayanan()
+      .then((dataJenisPelayanan) => {
+        // Update state userData dengan data yang diterima dari axios
+        setDataJenisPelayanan(dataJenisPelayanan);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+    getKategoriPelayanan()
+      .then((dataKategoriPelayanan) => {
+        // Update state userData dengan data yang diterima dari axios
+        setDataKategoriPelayanan(dataKategoriPelayanan);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+  }, []);
 
   const saveNewLead = async () => {
     if (leadObj.idPegawai.trim() === "")
@@ -125,12 +255,13 @@ function AddPengaduanTTEModalBody({ closeModal }) {
 
   return (
     <>
-      <InputText
-        type="text"
-        defaultValue={leadObj.idPegawai}
-        updateType="idPegawai"
-        containerStyle="mt-4"
+      <SelectBox
+        options={dataSelectPegawai}
         labelTitle="Nama Pegawai"
+        placeholder="Pilih Pegawai"
+        containerStyle="mt-4"
+        updateType="idPegawai"
+        defaultValue={leadObj.idPegawai}
         updateFormValue={updateFormValue}
       />
 
@@ -143,30 +274,33 @@ function AddPengaduanTTEModalBody({ closeModal }) {
         updateFormValue={updateFormValue}
       />
 
-      <InputText
-        type="text"
-        defaultValue={leadObj.jenisPelayanan}
-        updateType="jenisPelayanan"
-        containerStyle="mt-4"
+      <SelectBox
+        options={dataSelectJenisPelayanan}
         labelTitle="Jenis Pelayanan"
+        placeholder="Pilih Jenis Pelayanan"
+        containerStyle="mt-4"
+        updateType="jenisPelayanan"
+        defaultValue={leadObj.jenisPelayanan}
         updateFormValue={updateFormValue}
       />
 
-      <InputText
-        type="text"
-        defaultValue={leadObj.kategoriPelayanan}
-        updateType="kategoriPelayanan"
-        containerStyle="mt-4"
+      <SelectBox
+        options={dataSelectKategoriPelayanan}
         labelTitle="Kategori Pelayanan"
+        placeholder="Pilih Kategori Pelayanan"
+        containerStyle="mt-4"
+        updateType="kategoriPelayanan"
+        defaultValue={leadObj.kategoriPelayanan}
         updateFormValue={updateFormValue}
       />
 
-      <InputText
-        type="text"
-        defaultValue={leadObj.statusPelayanan}
-        updateType="statusPelayanan"
-        containerStyle="mt-4"
+      <SelectBox
+        options={dataSelectStatus}
         labelTitle="Status Pelayanan"
+        placeholder="Status Pelayanan"
+        containerStyle="mt-4"
+        updateType="statusPelayanan"
+        defaultValue={leadObj.statusPelayanan}
         updateFormValue={updateFormValue}
       />
 
@@ -197,12 +331,13 @@ function AddPengaduanTTEModalBody({ closeModal }) {
         updateFormValue={updateFormValue}
       />
 
-      <InputText
-        type="number"
-        defaultValue={leadObj.opd}
-        updateType="opd"
+      <SelectBox
+        options={dataSelectOpd}
+        labelTitle="OPD"
+        placeholder="Pilih Pegawai"
         containerStyle="mt-4"
-        labelTitle="OPD Customer"
+        updateType="opd"
+        defaultValue={leadObj.opd}
         updateFormValue={updateFormValue}
       />
 

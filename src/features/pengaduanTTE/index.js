@@ -191,11 +191,11 @@ function PengaduanTTE() {
                 return (
                   <tr key={k}>
                     <td>{k + 1}</td>
-                    <td>{l.idPegawai}</td>
+                    <td>{l.namaPegawai}</td>
                     <td>{l.tanggalPelayanan}</td>
                     <td>{l.kategoriPelayanan}</td>
                     <td>{l.namaCustomer}</td>
-                    <td>{l.opd}</td>
+                    <td>{l.namaOpd}</td>
                     <td>{l.statusPelayanan}</td>
                     <td>
                       <button

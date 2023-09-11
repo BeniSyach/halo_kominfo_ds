@@ -22,8 +22,15 @@ function AddManajemenUserModalBody({ closeModal }) {
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
 
   const getTotalPengaduan = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
     const responseUser = await axios.get(
-      "/APIHaloKominfoInternal/api/TampilJabatan"
+      "/APIHaloKominfoInternal/api/TampilJabatan",
+      config
     );
     return responseUser.data.data;
   };

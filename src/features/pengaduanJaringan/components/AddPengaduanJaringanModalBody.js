@@ -1,7 +1,9 @@
 import axios from "axios";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import InputText from "../../../components/Input/InputText";
+import SelectBox from "../../../components/Input/SelectBox";
 import ErrorText from "../../../components/Typography/ErrorText";
 import { showNotification } from "../../common/headerSlice";
 import { tambahPengaduanJaringan } from "../pengaduanJaringanSlice";
@@ -23,6 +25,77 @@ function AddPengaduanJaringanModalBody({ closeModal }) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [leadObj, setLeadObj] = useState(INITIAL_LEAD_OBJ);
+
+  const getTotalPengaduan = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/TampilPegawai",
+      config
+    );
+    return responseUser.data.data;
+  };
+  const [dataTotalPengaduan, setTotalPengaduanData] = useState([]);
+
+  const dataSelectPegawai = dataTotalPengaduan.map((data) => ({
+    name: data.namaPegawai,
+    value: data.id,
+  }));
+
+  const getOpd = async () => {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const responseUser = await axios.get(
+      "/APIHaloKominfoInternal/api/TampilOpd",
+      config
+    );
+    return responseUser.data.data;
+  };
+
+  const dataSelectStatus = [
+    {
+      name: "Belum Selesai",
+      value: 0,
+    },
+    {
+      name: "Selesai",
+      value: 1,
+    },
+  ];
+
+  const [dataOpd, setDataOpd] = useState([]);
+
+  const dataSelectOpd = dataOpd.map((data) => ({
+    name: data.namaOpd,
+    value: data.id,
+  }));
+
+  useEffect(() => {
+    getTotalPengaduan()
+      .then((data) => {
+        // Update state userData dengan data yang diterima dari axios
+        setTotalPengaduanData(data);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+    getOpd()
+      .then((dataOpd) => {
+        // Update state userData dengan data yang diterima dari axios
+        setDataOpd(dataOpd);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil data:", error);
+      });
+  }, []);
 
   const saveNewLead = async () => {
     if (leadObj.idPegawai.trim() === "")
@@ -100,12 +173,13 @@ function AddPengaduanJaringanModalBody({ closeModal }) {
 
   return (
     <>
-      <InputText
-        type="text"
-        defaultValue={leadObj.idPegawai}
-        updateType="idPegawai"
-        containerStyle="mt-4"
+      <SelectBox
+        options={dataSelectPegawai}
         labelTitle="Nama Pegawai"
+        placeholder="Pilih Pegawai"
+        containerStyle="mt-4"
+        updateType="idPegawai"
+        defaultValue={leadObj.idPegawai}
         updateFormValue={updateFormValue}
       />
 
@@ -127,12 +201,13 @@ function AddPengaduanJaringanModalBody({ closeModal }) {
         updateFormValue={updateFormValue}
       />
 
-      <InputText
-        type="text"
-        defaultValue={leadObj.statusPengaduan}
-        updateType="statusPengaduan"
-        containerStyle="mt-4"
+      <SelectBox
+        options={dataSelectStatus}
         labelTitle="Status Pengaduan"
+        placeholder="Pilih Pegawai"
+        containerStyle="mt-4"
+        updateType="statusPengaduan"
+        defaultValue={leadObj.statusPengaduan}
         updateFormValue={updateFormValue}
       />
 
@@ -145,12 +220,13 @@ function AddPengaduanJaringanModalBody({ closeModal }) {
         updateFormValue={updateFormValue}
       />
 
-      <InputText
-        type="text"
-        defaultValue={leadObj.opd}
-        updateType="opd"
-        containerStyle="mt-4"
+      <SelectBox
+        options={dataSelectOpd}
         labelTitle="OPD"
+        placeholder="Pilih Pegawai"
+        containerStyle="mt-4"
+        updateType="opd"
+        defaultValue={leadObj.opd}
         updateFormValue={updateFormValue}
       />
 
